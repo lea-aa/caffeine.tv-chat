@@ -46,16 +46,44 @@ javascript:(function(){
                             cursor: move;
                             z-index: 10;
                             background-color: #4d4d70;            
-                            text-align: center;
-                            position: sticky;
+                            position: sticky;                            
+                            display: flex;
+                            padding: 2px 0px;
                         }
 
-                        #mensajesdiv{
-                            
+                        #arrastrable{
+                            width: 70%;
+                            text-align: center;
+                        }
+                        
+                        #emojitext{
+                            width: 25%;
+                            text-align: right;
+                        }
+                
+                        #emoji{
+                            display: inline-block;
+                        }
+                
+                        #emoji:hover {
+                            animation-name: rotate; 
+                            animation-duration: 2s; 
+                            animation-iteration-count: infinite;
+                            animation-timing-function: linear;
+                        }
+
+                        @keyframes rotate {
+                            from {transform: rotate(0deg);}
+                            to {transform: rotate(360deg);}
                         }
                     </style>
                     <div id="caja">
-                        <div id="cajaheader">👉Arrastralo de aca👈</div>     
+                        <div id="cajaheader">
+                            <div id="arrastrable">👉Arrastralo de aca👈</div>
+                            <div id=emojitext>
+                                <span id="emoji">🤓</span>👆
+                            </div>                                
+                        </div>     
                         <div id="mensajesdiv"></div>                   
                     </div>`;
                                 
