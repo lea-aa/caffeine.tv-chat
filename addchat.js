@@ -165,7 +165,7 @@ javascript:(function(){
                     /*console.log(mensaje);*/
                     mensajes.push(mensaje);               
                     mensajesdiv.innerHTML += `<div class="mensaje" >
-                                            <span class="nombre-usuario">
+                                            <span class="nombre-usuario" style="color: ${get_usuario_color(usuario)}">
                                                 ${usuario}
                                             </span>
                                             :
@@ -186,6 +186,22 @@ javascript:(function(){
         
             window.setTimeout( function () { mostrar_mensajes(); }, tiempo_espera ); 
         }
+
+        function get_usuario_color(nombre_usuario){
+            if(!(nombre_usuario in usuarios_colores)){
+                usuarios_colores[nombre_usuario] = generar_color();                
+            }
+
+            return usuarios_colores[nombre_usuario];
+        }
+
+        function generar_color(){
+            var lightColor='hsl('+Math.floor(Math.random()*361)+',100%,65%)';
+
+            return lightColor;
+        }
+
+        var usuarios_colores = {};
 
         var mensajesdiv = document.getElementById("mensajesdiv");
 
