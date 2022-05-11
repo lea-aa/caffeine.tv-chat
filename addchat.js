@@ -4,6 +4,12 @@ javascript:(function(){
 		return;
 	}
     var pagina = document.getElementsByClassName("stage-frame__redesign_broadcastFrame___RGd64")[0];
+
+    pagina.style.margin = "0";
+
+    var alinear = document.getElementsByClassName("stage-frame__redesign_mainContent___2HuMa")[0];
+    
+    alinear.style.alignItems = "baseline";
     
     var newDiv = document.createElement("div");
     newDiv.classList.add("cajota");
@@ -135,8 +141,8 @@ javascript:(function(){
                                 
         document.getElementsByClassName("cajota")[0].innerHTML = chatHTML;  
 
-        document.getElementById("caja").style.top = "200px";
-        document.getElementById("caja").style.right = "0px";
+        document.getElementById("caja").style.top = "100px";
+        document.getElementById("caja").style.left = pagina.offsetWidth + 100 + "px";
     }
     addChat();
 
