@@ -25,7 +25,7 @@ javascript:(function(){
                             background-color: var(--color-fondo);
                             border-color: var(--color-bordes);
                             position: absolute;
-                            z-index: 9;
+                            z-index: 50;
                             resize: both;
                             font-family: "Poppins","Roboto",sans-serif;
                             color: var(--color-letra);                        
@@ -77,7 +77,7 @@ javascript:(function(){
                             width: 100%;
                             /* padding: 10px;  */
                             cursor: move;
-                            z-index: 10;
+                            z-index: 51;
                             background-color: var(--color-bordes);      
                             position: sticky;                            
                             display: flex;
@@ -196,15 +196,16 @@ javascript:(function(){
                 if (!mensajes.includes(mensaje)){                    
                     /*console.log(mensaje);*/
                     mensajes.push(mensaje);               
-                    mensajesdiv.innerHTML += `<div class="mensaje" >
-                                            <span class="nombre-usuario" style="color: ${get_usuario_color(usuario)}">
-                                                ${usuario}
-                                            </span>
-                                            :
-                                            <span class="texto-mensaje">
-                                                ${texto}
-                                            </span>
-                                        </div>`;
+                    mensajesdiv.innerHTML += `<hr style="margin: 0px; border: 1px solid #4d4d70;"/>
+                                                <div class="mensaje" >
+                                                    <span class="nombre-usuario" style="color: ${get_usuario_color(usuario)}">
+                                                        ${usuario}
+                                                    </span>
+                                                    :
+                                                    <span class="texto-mensaje">
+                                                        ${texto}
+                                                    </span>
+                                                </div>`;
                     
                     var mensajes_divs = document.getElementsByClassName("mensaje");
                     if (auto_scroll){
