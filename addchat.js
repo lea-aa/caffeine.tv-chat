@@ -27,6 +27,7 @@ javascript:(function(){
                             /* background-color: #f1f1f1;
                             border: 1px solid #d3d3d3;
                             text-align: center;  */
+                            border-radius: 15px;
                         }
 
                         .mensaje{
@@ -49,20 +50,22 @@ javascript:(function(){
                             position: sticky;                            
                             display: flex;
                             padding: 2px 0px;
+                            border-radius: 8px;
                         }
 
                         #arrastrable{
-                            width: 70%;
+                            width: inherit;
                             text-align: center;
                         }
                         
                         #emojitext{
-                            width: 25%;
-                            text-align: right;
+                            width: 50px;
+                            text-align: left;
                         }
                 
                         #emoji{
-                            display: inline-block;
+                            display: inline-block;                            
+                            cursor: pointer;
                         }
                 
                         #emoji:hover {
@@ -79,10 +82,10 @@ javascript:(function(){
                     </style>
                     <div id="caja">
                         <div id="cajaheader">
-                            <div id="arrastrable">👉Arrastralo de aca👈</div>
                             <div id=emojitext>
                                 <span id="emoji">🤓</span>👆
                             </div>                                
+                            <div id="arrastrable">👉Arrastralo de aca👈</div>
                         </div>     
                         <div id="mensajesdiv"></div>                   
                     </div>`;
