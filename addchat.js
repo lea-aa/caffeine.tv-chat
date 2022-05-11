@@ -9,6 +9,12 @@ javascript:(function(){
     pagina.parentNode.insertBefore(newDiv, pagina.nextSibling);
     function addChat(){
         chatHTML = `<style>
+                        :root{
+                            --color-letra: #ffffffcc;
+                            --color-fondo: #28283a;
+                            --color-bordes: #4d4d70;
+                        }
+
                         #caja{
                             border-style: solid;            
                             width: 300px;
@@ -16,18 +22,44 @@ javascript:(function(){
                             padding: 5px;
                             word-wrap: break-word;
                             overflow: auto;
-                            background-color: #28283a;
-                            border-color: #4d4d70;
+                            background-color: var(--color-fondo);
+                            border-color: var(--color-bordes);
                             position: absolute;
                             z-index: 9;
                             resize: both;
                             font-family: "Poppins","Roboto",sans-serif;
-                            color: #ffffffcc;            
+                            color: var(--color-letra);                        
                             /* background-image: radial-gradient(circle closest-corner , #28283a , #4e4e6e);  */
                             /* background-color: #f1f1f1;
                             border: 1px solid #d3d3d3;
                             text-align: center;  */
                             border-radius: 15px;
+                        }
+
+                        #caja{
+                            scrollbar-color: var(--color-bordes) var(--color-fondo);            
+                            scrollbar-width: thin;
+                        }
+                        #caja:hover {
+                            scrollbar-color: var(--color-bordes) var(--color-letra);  
+                        }
+                
+                        /* WebKit and Chromiums */
+                        #caja::-webkit-scrollbar {
+                            width: 5px;
+                            background-color: var(--color-fondo);
+                            border-radius: 5px;
+                        }
+                        #caja::-webkit-scrollbar-thumb {
+                            background: var(--color-bordes);
+                            border-radius: 5px;
+                        }
+                        /* WebKit and Chromiums */
+                        #caja:hover::-webkit-scrollbar {
+                            background-color: var(--color-letra);
+                        }
+                        #caja:hover::-webkit-scrollbar-thumb {
+                            background: var(--color-bordes);
                         }
 
                         .mensaje{
@@ -46,7 +78,7 @@ javascript:(function(){
                             /* padding: 10px;  */
                             cursor: move;
                             z-index: 10;
-                            background-color: #4d4d70;            
+                            background-color: var(--color-bordes);      
                             position: sticky;                            
                             display: flex;
                             padding: 2px 0px;
