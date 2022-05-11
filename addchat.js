@@ -1,4 +1,8 @@
 javascript:(function(){    
+    if(typeof window.caja !== "undefined"){
+		window.caja.style.visibility = "visible";
+		return;
+	}
     var pagina = document.getElementsByClassName("stage-frame__redesign_broadcastFrame___RGd64")[0];
     
     var newDiv = document.createElement("div");
@@ -86,13 +90,13 @@ javascript:(function(){
                         }
 
                         #arrastrable{
-                            width: inherit;
+                            width: calc(100% - 70px);
                             text-align: center;
                         }
                         
                         #emojitext{
                             width: 50px;
-                            text-align: left;
+                            text-align: center;
                         }
                 
                         #emoji{
@@ -111,13 +115,20 @@ javascript:(function(){
                             from {transform: rotate(0deg);}
                             to {transform: rotate(360deg);}
                         }
+
+                        #cerrar {            
+                            width: 25px;
+                            text-align: left;
+                            cursor: pointer;
+                        }
                     </style>
                     <div id="caja">
                         <div id="cajaheader">
                             <div id=emojitext>
                                 <span id="emoji">🤓</span>👆
                             </div>                                
-                            <div id="arrastrable">👉Arrastralo de aca👈</div>
+                            <div id="arrastrable">👇 el chat <span id="emoji">🤪</span></div>
+                            <div id="cerrar">| x</div>
                         </div>     
                         <div id="mensajesdiv"></div>                   
                     </div>`;
@@ -252,7 +263,13 @@ javascript:(function(){
             /*console.log("out");*/
         }, false);
 
-        
+        var boton_cerrar = document.getElementById("cerrar");
+
+        boton_cerrar.addEventListener("click", function(){
+            caja.style.visibility = "hidden";
+        }, false);
+
+        window.caja = caja;
         
         var mensajes = new Array();
         
