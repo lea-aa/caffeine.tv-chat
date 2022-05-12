@@ -1,4 +1,4 @@
-javascript:(function(){    
+javascript:(function(){
     if(typeof window.caja !== "undefined"){
 		window.caja.style.visibility = "visible";
 		return;
@@ -8,9 +8,9 @@ javascript:(function(){
     pagina.style.margin = "0";
 
     var alinear = document.getElementsByClassName("stage-frame__redesign_mainContent___2HuMa")[0];
-    
+
     alinear.style.alignItems = "baseline";
-    
+
     var newDiv = document.createElement("div");
     newDiv.classList.add("cajota");
 
@@ -26,7 +26,7 @@ javascript:(function(){
                         }
 
                         #caja{
-                            border-style: solid;            
+                            border-style: solid;
                             width: 300px;
                             height: 400px;
                             padding: 5px;
@@ -38,7 +38,7 @@ javascript:(function(){
                             z-index: 50;
                             resize: both;
                             font-family: "Poppins","Roboto",sans-serif;
-                            color: var(--color-letra);                        
+                            color: var(--color-letra);
                             /* background-image: radial-gradient(circle closest-corner , #28283a , #4e4e6e);  */
                             /* background-color: #f1f1f1;
                             border: 1px solid #d3d3d3;
@@ -48,14 +48,14 @@ javascript:(function(){
                         }
 
                         #caja{
-                            scrollbar-color: var(--color-bordes) var(--color-fondo);            
+                            scrollbar-color: var(--color-bordes) var(--color-fondo);
                             scrollbar-width: thin;
                         }
                         #caja:hover {
-                            scrollbar-color: var(--color-bordes) hsl(240, 29%, 58%);                              
+                            scrollbar-color: var(--color-bordes) hsl(240, 29%, 58%);
                             border-color: hsl(240, 29%, 58%);
                         }
-                
+
                         /* WebKit and Chromiums */
                         #caja::-webkit-scrollbar {
                             width: 5px;
@@ -75,11 +75,11 @@ javascript:(function(){
                         }
 
                         .mensaje{
-                            font-family: "Poppins","Roboto",sans-serif;            
-                            background-color: var(--color-fondo);                            
+                            font-family: "Poppins","Roboto",sans-serif;
+                            background-color: var(--color-fondo);
                             transition: all 0.5s ease-in-out;
                         }
-                        
+
                         .mensaje:hover{
                             filter: brightness(120%);
                         }
@@ -96,8 +96,8 @@ javascript:(function(){
                             /* padding: 10px;  */
                             cursor: move;
                             z-index: 51;
-                            background-color: var(--color-bordes);      
-                            position: sticky;                            
+                            background-color: var(--color-bordes);
+                            position: sticky;
                             display: flex;
                             padding: 2px 0px;
                             border-radius: 8px;
@@ -110,7 +110,7 @@ javascript:(function(){
                             background-size: 200% 200%;
                             transition: .5s ease-out;
                         }
-                
+
                         #cajaheader:hover {
                             background-position: bottom;
                             filter: brightness(120%);
@@ -120,20 +120,20 @@ javascript:(function(){
                             width: calc(100% - 70px);
                             text-align: center;
                         }
-                        
+
                         #emojitext{
                             width: 50px;
                             text-align: center;
                         }
-                
+
                         #emoji{
-                            display: inline-block;                            
+                            display: inline-block;
                             cursor: pointer;
                         }
-                
+
                         #emoji:hover {
-                            animation-name: rotate; 
-                            animation-duration: 2s; 
+                            animation-name: rotate;
+                            animation-duration: 2s;
                             animation-iteration-count: infinite;
                             animation-timing-function: linear;
                         }
@@ -143,7 +143,7 @@ javascript:(function(){
                             to {transform: rotate(360deg);}
                         }
 
-                        #cerrar {            
+                        #cerrar {
                             width: 25px;
                             text-align: left;
                             cursor: pointer;
@@ -153,14 +153,14 @@ javascript:(function(){
                         <div id="cajaheader">
                             <div id=emojitext>
                                 <span id="emoji">🤓</span>👆
-                            </div>                                
+                            </div>
                             <div id="arrastrable">👇 el chat <span id="emoji">🤪</span></div>
                             <div id="cerrar">| x</div>
-                        </div>     
-                        <div id="mensajesdiv"></div>                   
+                        </div>
+                        <div id="mensajesdiv"></div>
                     </div>`;
-                                
-        document.getElementsByClassName("cajota")[0].innerHTML = chatHTML;  
+
+        document.getElementsByClassName("cajota")[0].innerHTML = chatHTML;
 
         document.getElementById("caja").style.top = "100px";
         document.getElementById("caja").style.left = pagina.offsetWidth + 100 + "px";
@@ -178,7 +178,7 @@ javascript:(function(){
             /* otherwise, move the DIV from anywhere inside the DIV: */
             elmnt.onmousedown = dragMouseDown;
         }
-        
+
         function dragMouseDown(e) {
             e = e || window.event;
             e.preventDefault();
@@ -189,7 +189,7 @@ javascript:(function(){
             /* call a function whenever the cursor moves: */
             document.onmousemove = elementDrag;
         }
-        
+
         function elementDrag(e) {
             e = e || window.event;
             e.preventDefault();
@@ -202,7 +202,7 @@ javascript:(function(){
             elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
             elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
         }
-        
+
         function closeDragElement() {
             /* stop moving when mouse button is released: */
             document.onmouseup = null;
@@ -215,25 +215,25 @@ javascript:(function(){
             if (rep == max_rep){
                 mensajes = new Array();
             }
-        
+
             var caja_mensajes_class = "reaction__reaction___1LNsk";
-            
+
             var contenido_mensajes_class = "reaction-body__redesign_reactionBody___2a9UP";
-            
+
             var usuario_mensaje_class = "reaction-footer__redesign_reactionFooter___yeGFN";
-            
-            var caja_mensajes = document.getElementsByClassName(caja_mensajes_class);    
-            
+
+            var caja_mensajes = document.getElementsByClassName(caja_mensajes_class);
+
             /** itera sobre las cajas y muestra el contenido */
             for (var i = 0; i < caja_mensajes.length; i++){
                 var usuario = caja_mensajes[i].getElementsByClassName(usuario_mensaje_class)[0].innerText;
                 var texto = caja_mensajes[i].getElementsByClassName(contenido_mensajes_class)[0].innerText;
-        
-                var mensaje = usuario + ": " + texto; 
-                
-                if (!mensajes.includes(mensaje)){                    
+
+                var mensaje = usuario + ": " + texto;
+
+                if (!mensajes.includes(mensaje)){
                     /*console.log(mensaje);*/
-                    mensajes.push(mensaje);               
+                    mensajes.push(mensaje);
                     mensajesdiv.innerHTML += `<hr style="margin: 0px; border: 1px solid #4d4d70;"/>
                                                 <div class="mensaje" >
                                                     <span class="nombre-usuario" style="color: ${get_usuario_color(usuario)}">
@@ -244,23 +244,23 @@ javascript:(function(){
                                                         ${texto}
                                                     </span>
                                                 </div>`;
-                    
+
                     var mensajes_divs = document.getElementsByClassName("mensaje");
                     if (auto_scroll){
                         mensajes_divs[mensajes_divs.length - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
 
                     }
-                }        
-            }    
-        
+                }
+            }
+
             rep++;
-        
-            window.setTimeout( function () { mostrar_mensajes(); }, tiempo_espera ); 
+
+            window.setTimeout( function () { mostrar_mensajes(); }, tiempo_espera );
         }
 
         function get_usuario_color(nombre_usuario){
             if(!(nombre_usuario in usuarios_colores)){
-                usuarios_colores[nombre_usuario] = generar_color();                
+                usuarios_colores[nombre_usuario] = generar_color();
             }
 
             return usuarios_colores[nombre_usuario];
@@ -297,23 +297,23 @@ javascript:(function(){
         }, false);
 
         window.caja = caja;
-        
+
         var mensajes = new Array();
-        
+
         /* para contar las repeticiones y cada x tiempo limpiar el array de mensajes */
         var rep = 0;
-        
+
         const segundos_espera = 2;
-        
+
         const tiempo_espera = 1000 * segundos_espera;
-        
+
         const tiempo_limpiar = 60;
-        
+
         const max_rep = tiempo_limpiar / segundos_espera;
-        
-        window.setTimeout( function () { mostrar_mensajes(); }, tiempo_espera ); 
+
+        window.setTimeout( function () { mostrar_mensajes(); }, tiempo_espera );
     }
 
     inicializar_chat();
-    
+
 })();
