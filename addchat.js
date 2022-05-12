@@ -212,8 +212,8 @@ javascript:(function(){
 
     function inicializar_chat(){
         function mostrar_mensajes(){
-            if (rep == max_rep){
-                mensajes = new Array();
+            if (mensajes.length > max_mensajes_dup){                
+                mensajes.shift();
             }
 
             var caja_mensajes_class = "reaction__reaction___1LNsk";
@@ -252,8 +252,6 @@ javascript:(function(){
                     }
                 }
             }
-
-            rep++;
 
             window.setTimeout( function () { mostrar_mensajes(); }, tiempo_espera );
         }
@@ -336,18 +334,24 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
 
         window.caja = caja;
 
-        var mensajes = new Array();
-
+        
         /* para contar las repeticiones y cada x tiempo limpiar el array de mensajes */
+        
+        /*const tiempo_limpiar = 60;
+        
         var rep = 0;
 
-        const segundos_espera = 2;
-
+        const max_rep = tiempo_limpiar / segundos_espera;*/
+        
+        
+        var mensajes = new Array();
+        
+        const segundos_espera = 1;
+        
         const tiempo_espera = 1000 * segundos_espera;
-
-        const tiempo_limpiar = 60;
-
-        const max_rep = tiempo_limpiar / segundos_espera;
+        
+        /* para contar cuantos mensajes maximos a almacenar para evitar mostrarlo duplicado */
+        const max_mensajes_dup = 10;
 
         window.setTimeout( function () { mostrar_mensajes(); }, tiempo_espera );
     }
