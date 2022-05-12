@@ -44,6 +44,7 @@ javascript:(function(){
                             border: 1px solid #d3d3d3;
                             text-align: center;  */
                             border-radius: 15px;
+                            transition: all 0.5s ease-in-out;
                         }
 
                         #caja{
@@ -51,7 +52,8 @@ javascript:(function(){
                             scrollbar-width: thin;
                         }
                         #caja:hover {
-                            scrollbar-color: var(--color-bordes) var(--color-letra);  
+                            scrollbar-color: var(--color-bordes) hsl(240, 29%, 58%);                              
+                            border-color: hsl(240, 29%, 58%);
                         }
                 
                         /* WebKit and Chromiums */
@@ -66,7 +68,7 @@ javascript:(function(){
                         }
                         /* WebKit and Chromiums */
                         #caja:hover::-webkit-scrollbar {
-                            background-color: var(--color-letra);
+                            background-color: hsl(240, 29%, 58%);
                         }
                         #caja:hover::-webkit-scrollbar-thumb {
                             background: var(--color-bordes);
@@ -74,6 +76,12 @@ javascript:(function(){
 
                         .mensaje{
                             font-family: "Poppins","Roboto",sans-serif;            
+                            background-color: var(--color-fondo);                            
+                            transition: all 0.5s ease-in-out;
+                        }
+                        
+                        .mensaje:hover{
+                            filter: brightness(120%);
                         }
 
                         .nombre-usuario{
@@ -93,6 +101,19 @@ javascript:(function(){
                             display: flex;
                             padding: 2px 0px;
                             border-radius: 8px;
+                        }
+
+                        /* se puede cambiar el color de la derecha para hacer un cambio total de color
+                            solo lo dejo por si despues se me da por hacerlo de dos colores pero ahora es redundante */
+                        #cajaheader{
+                            background: linear-gradient(to bottom, var(--color-bordes) 50%, hsl(240, 19%, 39%) 50%) top;
+                            background-size: 200% 200%;
+                            transition: .5s ease-out;
+                        }
+                
+                        #cajaheader:hover {
+                            background-position: bottom;
+                            filter: brightness(120%);
                         }
 
                         #arrastrable{
