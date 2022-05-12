@@ -44,7 +44,7 @@ javascript:(function(){
                             border: 1px solid #d3d3d3;
                             text-align: center;  */
                             border-radius: 15px;
-                            transition: all 0.5s ease-in-out;
+                            transition: border-color 0.5s ease-in-out, scrollbar-color 0.5s ease-in-out;
                         }
 
                         #caja{
