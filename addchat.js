@@ -38,6 +38,8 @@ javascript:(function(){
                             z-index: 50;
                             resize: both;
                             font-family: "Poppins","Roboto",sans-serif;
+                            font-size: 12px;
+                            font-weight: 500;
                             color: var(--color-letra);
                             /* background-image: radial-gradient(circle closest-corner , #28283a , #4e4e6e);  */
                             /* background-color: #f1f1f1;
@@ -82,6 +84,7 @@ javascript:(function(){
 
                         .mensaje:hover{
                             filter: brightness(120%);
+                            font-size: 15px;
                         }
 
                         .nombre-usuario{
@@ -101,6 +104,7 @@ javascript:(function(){
                             display: flex;
                             padding: 2px 0px;
                             border-radius: 8px;
+                            font-size: 15px;
                         }
 
                         /* se puede cambiar el color de la derecha para hacer un cambio total de color
@@ -114,6 +118,7 @@ javascript:(function(){
                         #cajaheader:hover {
                             background-position: bottom;
                             filter: brightness(120%);
+                            font-size: 17px;
                         }
 
                         #arrastrable{
@@ -162,8 +167,14 @@ javascript:(function(){
 
         document.getElementsByClassName("cajota")[0].innerHTML = chatHTML;
 
-        document.getElementById("caja").style.top = "100px";
-        document.getElementById("caja").style.left = pagina.offsetWidth + 100 + "px";
+        var top_bar_height = document.getElementsByClassName("header__redesign_header___2usis header__stageHeader___Ln78k header__isHidden___q0y9f")[0].offsetHeight;
+
+        var caja = document.getElementById("caja");
+        caja.style.top = top_bar_height + 10 + "px";
+        caja.style.left = pagina.offsetWidth + 10 + "px";
+
+        caja.style.width = document.body.clientWidth - pagina.offsetWidth - 20 + "px";
+        caja.style.height = pagina.offsetHeight - caja.offsetTop + "px";
     }
     addChat();
 
@@ -266,7 +277,7 @@ javascript:(function(){
 
         function generar_color(nombre_usuario){
             /* sacar el "hash" para que sea siempre random, dejarlo para que sea siempre el mismo color para ese usuario pero no se puede elegir */
-            var lightColor='hsl('+generar_numero(nombre_usuario, "hash")+',100%,65%)';
+            var lightColor='hsl('+generar_numero(nombre_usuario, "hash")+',100%,75%)';
 
             return lightColor;
         }
