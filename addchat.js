@@ -296,6 +296,22 @@ javascript:(function(){
             caja.style.visibility = "hidden";
         }, false);
 
+        var boton_ayuda = document.getElementById("emojitext");
+
+        boton_ayuda.addEventListener("click", function(){
+            alert(`¿Cómo funciona el chat?\n
+Cada 2 segundos revisa si hay un globito nuevo de chat y si hay, lo agrega a la lista. \n
+Si la ventana del stream no esta visible en la pantalla (minimizada o hay otra ventana maximizada encima) los globitos no salen y los mensajes no van a quedar registrados.\n
+\n
+¿Qué se puede hacer con el chat?\n
+Podés mover la ventanita arrastrandola desde la parte de arriba donde está el título "👇 el chat 🤪".\n
+Con la X de arriba a la derecha podes cerrarlo y para abrirlo otra vez solo tenes que volver a tocar el marcador.\n
+También podes cambiar el tamaño desde la esquina inferior derecha.\n
+\n
+Dato extra.\n
+Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te podes dar cuenta porque la barrita de scroll cambia de color.`)
+            }, false);
+
         window.caja = caja;
 
         var mensajes = new Array();
