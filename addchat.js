@@ -383,6 +383,7 @@ Si la ventana del stream no esta visible en la pantalla (minimizada o hay otra v
 ¿Qué se puede hacer con el chat?\n
 Podés mover la ventanita arrastrandola desde la parte de arriba donde está el título "👇 el chat 🤪".\n
 Con la X de arriba a la derecha podes cerrarlo y para abrirlo otra vez solo tenes que volver a tocar el marcador.\n
+Con el cuadrado al lado de la x podes sacar el chat a otra ventana pero por ahora no tiene el auto scroll.\n
 También podes cambiar el tamaño desde la esquina inferior derecha.\n
 \n
 Dato extra.\n
