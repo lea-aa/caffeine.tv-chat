@@ -119,24 +119,29 @@ javascript:(function(){
                             background-position: bottom;
                             filter: brightness(120%);
                             font-size: 17px;
+                            display: flex;
                         }
 
                         #arrastrable{
-                            width: calc(100% - 70px);
                             text-align: center;
+                            flex-grow: 1;
                         }
 
                         #emojitext{
-                            width: 50px;
+                            width: max-content;
                             text-align: center;
+                            margin-left: 5px;
                         }
 
-                        #emoji{
-                            display: inline-block;
+                        #emoji{                            
                             cursor: pointer;
                         }
 
-                        #emoji:hover {
+                        .emoji{
+                            display: inline-block;
+                        }
+
+                        .emoji:hover {
                             animation-name: rotate;
                             animation-duration: 2s;
                             animation-iteration-count: infinite;
@@ -148,26 +153,37 @@ javascript:(function(){
                             to {transform: rotate(360deg);}
                         }
 
-                        #cerrar {
-                            width: 25px;
+                        #botones-ventana {
+                            width: max-content;
                             text-align: left;
                             cursor: pointer;
+                            margin-right: 5px;
+                        }
+
+                        #cerrar{
+                            transition: color 0.5s ease-in-out;
+
+                        }
+
+                        #cerrar:hover {
+                            color: rgb(255, 88, 88);
                         }
                     </style>
                     <div id="caja">
                         <div id="cajaheader">
                             <div id=emojitext>
-                                <span id="emoji">🤓</span>👆
+                                <span id="emoji" class="emoji">🤓</span>👆
                             </div>
-                            <div id="arrastrable">👇 el chat <span id="emoji">🤪</span></div>
-                            <div id="cerrar">| x</div>
+                            <div id="arrastrable">👇 el chat <span class="emoji">🤪</span></div>
+                            <div id="botones-ventana"><span id="extraer"> 🔳 </span>|<span id="cerrar"> x </span></div>
                         </div>
                         <div id="mensajesdiv"></div>
                     </div>`;
 
         document.getElementsByClassName("cajota")[0].innerHTML = chatHTML;
 
-        var top_bar_height = document.getElementsByClassName("header__redesign_header___2usis header__stageHeader___Ln78k header__isHidden___q0y9f")[0].offsetHeight;
+        var top_bar_height_class = "header__redesign_header___2usis";
+        var top_bar_height = document.getElementsByClassName(top_bar_height_class)[0].offsetHeight;
 
         var caja = document.getElementById("caja");
         caja.style.top = top_bar_height + 10 + "px";
@@ -245,21 +261,27 @@ javascript:(function(){
                 if (!mensajes.includes(mensaje)){
                     /*console.log(mensaje);*/
                     mensajes.push(mensaje);
-                    mensajesdiv.innerHTML += `<hr style="margin: 0px; border: 1px solid #4d4d70;"/>
-                                                <div class="mensaje" >
-                                                    <span class="nombre-usuario" style="color: ${get_usuario_color(usuario)}">
-                                                        ${usuario}
-                                                    </span>
-                                                    :
-                                                    <span class="texto-mensaje">
-                                                        ${texto}
-                                                    </span>
-                                                </div>`;
+                    var mensajeHtml = `<hr style="margin: 0px; border: 1px solid #4d4d70;"/>
+                                        <div class="mensaje" >
+                                            <span class="nombre-usuario" style="color: ${get_usuario_color(usuario)}">
+                                                ${usuario}
+                                            </span>
+                                            :
+                                            <span class="texto-mensaje">
+                                                ${texto}
+                                            </span>
+                                        </div>`;
+                    mensajesdiv.innerHTML += mensajeHtml;
 
                     var mensajes_divs = document.getElementsByClassName("mensaje");
+
                     if (auto_scroll){
                         mensajes_divs[mensajes_divs.length - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+                    }
 
+                    if (typeof pop_out_chat != "undefined") {
+                        var pop_out_chat_messajes_html = pop_out_chat.document.getElementById("mensajesdiv");
+                        pop_out_chat_messajes_html.innerHTML += mensajeHtml;
                     }
                 }
             }
@@ -341,11 +363,24 @@ También podes cambiar el tamaño desde la esquina inferior derecha.\n
 \n
 Dato extra.\n
 Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te podes dar cuenta porque la barrita de scroll cambia de color.`)
-            }, false);
+        }, false);
 
+        var pop_out_chat;
+
+        var boton_extraer = document.getElementById("extraer");
+
+        boton_extraer.addEventListener("click", function(){
+            pop_out_chat = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=600,top="+(screen.height-700)+",left="+(screen.width-500));
+            pop_out_chat.document.body.innerHTML = document.getElementsByClassName("cajota")[0].innerHTML;
+            pop_out_chat.document.getElementById("caja").style.top = "0";
+            pop_out_chat.document.getElementById("caja").style.left = "0";
+            pop_out_chat.document.getElementById("caja").style.width = "calc(100% - 16px)";
+            pop_out_chat.document.getElementById("caja").style.height = "calc(100% - 16px)";
+            pop_out_chat.document.body.style.background = "black";
+        }, false);
+            
         window.caja = caja;
 
-        
         /* para contar las repeticiones y cada x tiempo limpiar el array de mensajes */
         
         /*const tiempo_limpiar = 60;
