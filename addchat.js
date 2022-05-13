@@ -1,22 +1,33 @@
-javascript:(function(){
+javascript:(function(){ /* Version: 2022-05-13 17:05:06 */
     if(typeof window.caja !== "undefined"){
 		window.caja.style.visibility = "visible";
 		return;
 	}
-    var pagina = document.getElementsByClassName("stage-frame__redesign_broadcastFrame___RGd64")[0];
 
-    pagina.style.margin = "0";
-
-    var alinear = document.getElementsByClassName("stage-frame__redesign_mainContent___2HuMa")[0];
-
-    alinear.style.alignItems = "baseline";
+    var reproductor;
 
     var newDiv = document.createElement("div");
     newDiv.classList.add("cajota");
 
-/*    pagina.innerHTML += "<div class='cajota'></div>";*/
+    try {
+        reproductor = document.getElementsByClassName("stage-frame__redesign_broadcastFrame___RGd64")[0];
+        reproductor.style.margin = "0";
+        reproductor.parentNode.insertBefore(newDiv, reproductor.nextSibling);
+    } catch (error) {
+        console.log(error);
+        console.log("No se pudo encontrar el elemento reproductor");
+        document.body.appendChild(newDiv);
+    }
 
-    pagina.parentNode.insertBefore(newDiv, pagina.nextSibling);
+    try {
+        var alinear = document.getElementsByClassName("stage-frame__redesign_mainContent___2HuMa")[0];
+
+        alinear.style.alignItems = "baseline";
+    } catch (error) {
+        console.log(error);
+        console.log("No se pudo encontrar el elemento para alinear el reproductor");
+    }
+
     function addChat(){
         chatHTML = `<style>
                         :root{
@@ -133,7 +144,7 @@ javascript:(function(){
                             margin-left: 5px;
                         }
 
-                        #emoji{                            
+                        #emoji{
                             cursor: pointer;
                         }
 
@@ -183,14 +194,27 @@ javascript:(function(){
         document.getElementsByClassName("cajota")[0].innerHTML = chatHTML;
 
         var top_bar_height_class = "header__redesign_header___2usis";
-        var top_bar_height = document.getElementsByClassName(top_bar_height_class)[0].offsetHeight;
+        var top_bar_height = 56;
+
+        try {
+            document.getElementsByClassName(top_bar_height_class)[0].offsetHeight;
+        } catch (error) {
+            console.log(error);
+            console.log("No se pudo encontrar el elemento top_bar (barra superior)");
+        }
+
+        var reproductor_width = 800, reproductor_height = 470;
+
+        if (typeof reproductor != "undefined") {
+            reproductor_height = reproductor.offsetHeight;
+            reproductor_width = reproductor.offsetWidth;
+        }
 
         var caja = document.getElementById("caja");
         caja.style.top = top_bar_height + 10 + "px";
-        caja.style.left = pagina.offsetWidth + 10 + "px";
-
-        caja.style.width = document.body.clientWidth - pagina.offsetWidth - 20 + "px";
-        caja.style.height = pagina.offsetHeight - caja.offsetTop + "px";
+        caja.style.left = reproductor_width + 10 + "px";
+        caja.style.width = document.body.clientWidth - reproductor_width - 20 + "px";
+        caja.style.height = reproductor_height - caja.offsetTop + "px";
     }
     addChat();
 
@@ -239,7 +263,7 @@ javascript:(function(){
 
     function inicializar_chat(){
         function mostrar_mensajes(){
-            if (mensajes.length > max_mensajes_dup){                
+            if (mensajes.length > max_mensajes_dup){
                 mensajes.shift();
             }
 
@@ -378,24 +402,24 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
             pop_out_chat.document.getElementById("caja").style.height = "calc(100% - 16px)";
             pop_out_chat.document.body.style.background = "black";
         }, false);
-            
+
         window.caja = caja;
 
         /* para contar las repeticiones y cada x tiempo limpiar el array de mensajes */
-        
+
         /*const tiempo_limpiar = 60;
-        
+
         var rep = 0;
 
         const max_rep = tiempo_limpiar / segundos_espera;*/
-        
-        
+
+
         var mensajes = new Array();
-        
+
         const segundos_espera = 1;
-        
+
         const tiempo_espera = 1000 * segundos_espera;
-        
+
         /* para contar cuantos mensajes maximos a almacenar para evitar mostrarlo duplicado */
         const max_mensajes_dup = 10;
 
