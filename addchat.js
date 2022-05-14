@@ -1,8 +1,8 @@
-javascript:(function(){ /* Version: 2022-05-13 17:05:06 */
-    const url_regex = /www.caffeine\.tv\/./;
+javascript:(function(){ /* Version: 2022-05-14 17:01:44 */
+    const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
 
-    if(!url_regex.test(current_url)){
+    if(!caffeine_url_regex.test(current_url)){
         alert("Hay que ejecutar el script mientras se ve un stream en www.caffeine.tv/nombredelstreamer");
         return;
     }
@@ -104,6 +104,15 @@ javascript:(function(){ /* Version: 2022-05-13 17:05:06 */
                         .mensaje:hover{
                             filter: brightness(120%);
                             font-size: 15px;
+                        }
+
+                        .mensaje a{
+                            color: rgb(207, 148, 255);
+                            text-decoration: none;
+                        }
+                
+                        .mensaje a:hover {
+                           text-decoration: underline !important;
                         }
 
                         .nombre-usuario{
@@ -270,16 +279,18 @@ javascript:(function(){ /* Version: 2022-05-13 17:05:06 */
     }
 
     function inicializar_chat(){
+        const caja_mensajes_class = "reaction__reaction___1LNsk";
+
+        const contenido_mensajes_class = "reaction-body__redesign_reactionBody___2a9UP";
+
+        const usuario_mensaje_class = "reaction-footer__redesign_reactionFooter___yeGFN";
+
+        const url_regex_checker = /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/;
+
         function mostrar_mensajes(){
             if (mensajes.length > max_mensajes_dup){
                 mensajes.shift();
             }
-
-            const caja_mensajes_class = "reaction__reaction___1LNsk";
-
-            const contenido_mensajes_class = "reaction-body__redesign_reactionBody___2a9UP";
-
-            const usuario_mensaje_class = "reaction-footer__redesign_reactionFooter___yeGFN";
 
             var caja_mensajes = document.getElementsByClassName(caja_mensajes_class);
 
@@ -293,6 +304,21 @@ javascript:(function(){ /* Version: 2022-05-13 17:05:06 */
                 if (!mensajes.includes(mensaje)){
                     /*console.log(mensaje);*/
                     mensajes.push(mensaje);
+
+                    var texto_con_url = texto;
+
+                    var texto_url_match = texto_con_url.match(url_regex_checker);
+
+                    if (texto_url_match != null) {
+                        var url_matched = texto_url_match[0];
+                        
+                        if(!/http(s)?:\/\//.test(url_matched)){
+                            url_matched = "http://" + url_matched;
+                        }
+
+                        texto_con_url = texto_con_url.replace(texto_url_match[0], `<a href="${url_matched}" target="_blank">${texto_url_match[0]}</a>`);
+                    }
+
                     var mensajeHtml = `<hr style="margin: 0px; border: 1px solid #4d4d70;"/>
                                         <div class="mensaje" >
                                             <span class="nombre-usuario" style="color: ${get_usuario_color(usuario)}">
@@ -300,7 +326,7 @@ javascript:(function(){ /* Version: 2022-05-13 17:05:06 */
                                             </span>
                                             :
                                             <span class="texto-mensaje">
-                                                ${texto}
+                                                ${texto_con_url}
                                             </span>
                                         </div>`;
                     mensajesdiv.innerHTML += mensajeHtml;
