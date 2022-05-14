@@ -1,4 +1,12 @@
 javascript:(function(){ /* Version: 2022-05-13 17:05:06 */
+    const url_regex = /www.caffeine\.tv\/./;
+    const current_url = window.location.href ;
+
+    if(!url_regex.test(current_url)){
+        alert("Hay que ejecutar el script mientras se ve un stream en www.caffeine.tv/nombredelstreamer");
+        return;
+    }
+
     if(typeof window.caja !== "undefined"){
 		window.caja.style.visibility = "visible";
 		return;
@@ -193,7 +201,7 @@ javascript:(function(){ /* Version: 2022-05-13 17:05:06 */
 
         document.getElementsByClassName("cajota")[0].innerHTML = chatHTML;
 
-        var top_bar_height_class = "header__redesign_header___2usis";
+        const top_bar_height_class = "header__redesign_header___2usis";
         var top_bar_height = 56;
 
         try {
@@ -267,11 +275,11 @@ javascript:(function(){ /* Version: 2022-05-13 17:05:06 */
                 mensajes.shift();
             }
 
-            var caja_mensajes_class = "reaction__reaction___1LNsk";
+            const caja_mensajes_class = "reaction__reaction___1LNsk";
 
-            var contenido_mensajes_class = "reaction-body__redesign_reactionBody___2a9UP";
+            const contenido_mensajes_class = "reaction-body__redesign_reactionBody___2a9UP";
 
-            var usuario_mensaje_class = "reaction-footer__redesign_reactionFooter___yeGFN";
+            const usuario_mensaje_class = "reaction-footer__redesign_reactionFooter___yeGFN";
 
             var caja_mensajes = document.getElementsByClassName(caja_mensajes_class);
 
