@@ -1,4 +1,4 @@
-javascript:(function(){ /* Version: 2022-05-15 20:15:01 */
+javascript:(function(){ /* Version: 2022-05-15 20:26:35 */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
 
@@ -40,7 +40,7 @@ javascript:(function(){ /* Version: 2022-05-15 20:15:01 */
         chatHTML = `<style>
                         :root{
                             --color-letra: #ffffffcc;
-                            --color-fondo: black;
+                            --color-fondo: #28283a;
                             --color-bordes: #4d4d70;
                         }
 
