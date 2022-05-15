@@ -1,4 +1,4 @@
-javascript:(function(){ /* Version: 2022-05-14 17:01:44 */
+javascript:(function(){ /* Version: 2022-05-15 20:02:09 */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
 
