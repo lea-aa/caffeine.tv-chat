@@ -40,7 +40,7 @@ javascript:(function(){ /* Version: 2022-05-14 17:01:44 */
         chatHTML = `<style>
                         :root{
                             --color-letra: #ffffffcc;
-                            --color-fondo: #28283a;
+                            --color-fondo: black;
                             --color-bordes: #4d4d70;
                         }
 
