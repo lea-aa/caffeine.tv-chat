@@ -1,4 +1,8 @@
-javascript:(function(){ /* Version: 2022-05-15 20:26:35 */
+javascript:(function(){
+    /*
+        Version: 2022-06-06T18:03:53
+        upvotes implementados
+    */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
 
@@ -110,7 +114,7 @@ javascript:(function(){ /* Version: 2022-05-15 20:26:35 */
                             color: rgb(207, 148, 255);
                             text-decoration: none;
                         }
-                
+
                         .mensaje a:hover {
                            text-decoration: underline !important;
                         }
@@ -196,6 +200,14 @@ javascript:(function(){ /* Version: 2022-05-15 20:26:35 */
                         #cerrar:hover {
                             color: rgb(255, 88, 88);
                         }
+
+                        .upvotes:not(:empty){
+                            color:black;
+                            background-color: rgb(255, 0, 255);
+                            border-radius: 4px;
+                            padding: 0px 4px;
+                        }
+
                     </style>
                     <div id="caja">
                         <div id="cajaheader">
@@ -285,6 +297,8 @@ javascript:(function(){ /* Version: 2022-05-15 20:26:35 */
 
         const usuario_mensaje_class = "reaction-footer__redesign_reactionFooter___yeGFN";
 
+        const upvotes_mensaje_class = "reaction-badge__redesign_count___767MF";
+
         const url_regex_checker = /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/;
 
         function mostrar_mensajes(){
@@ -297,9 +311,10 @@ javascript:(function(){ /* Version: 2022-05-15 20:26:35 */
             /** itera sobre las cajas y muestra el contenido */
             for (var i = 0; i < caja_mensajes.length; i++){
                 var usuario = caja_mensajes[i].getElementsByClassName(usuario_mensaje_class)[0].innerText;
-                var texto = caja_mensajes[i].getElementsByClassName(contenido_mensajes_class)[0].innerText;
+                var texto = caja_mensajes[i].getElementsByClassName(contenido_mensajes_class)[0].innerText.replace("\n", " ");
+                var upvotes = caja_mensajes[i].getElementsByClassName(upvotes_mensaje_class)[0].innerText;
 
-                var mensaje = usuario + ": " + texto;
+                var mensaje = usuario + ":" + texto;
 
                 if (!mensajes.includes(mensaje)){
                     /*console.log(mensaje);*/
@@ -311,7 +326,7 @@ javascript:(function(){ /* Version: 2022-05-15 20:26:35 */
 
                     if (texto_url_match != null) {
                         var url_matched = texto_url_match[0];
-                        
+
                         if(!/http(s)?:\/\//.test(url_matched)){
                             url_matched = "http://" + url_matched;
                         }
@@ -323,7 +338,7 @@ javascript:(function(){ /* Version: 2022-05-15 20:26:35 */
                                         <div class="mensaje" >
                                             <span class="nombre-usuario" style="color: ${get_usuario_color(usuario)}">
                                                 ${usuario}
-                                            </span>
+                                            </span><span class="upvotes"></span>
                                             :
                                             <span class="texto-mensaje">
                                                 ${texto_con_url}
@@ -342,6 +357,20 @@ javascript:(function(){ /* Version: 2022-05-15 20:26:35 */
                         pop_out_chat_messajes_html.innerHTML += mensajeHtml;
                     }
                 }
+
+                if(upvotes != ""){
+                    let mensajes_en_chat = document.getElementsByClassName("mensaje");
+                    for (let i = mensajes_en_chat.length - 1; i > 0; i--) {
+                        const element = mensajes_en_chat[i];
+                        var regex_str = `^(${usuario})( \\d+)? : (${texto})$`;
+                        var regex = new RegExp(regex_str);
+                        if (regex.test(element.innerText)) {
+                            element.getElementsByClassName("upvotes")[0].innerText = upvotes;
+                            break;
+                        }
+                    }
+                }
+
             }
 
             window.setTimeout( function () { mostrar_mensajes(); }, tiempo_espera );
