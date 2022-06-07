@@ -206,6 +206,7 @@ javascript:(function(){
                             background-color: rgb(255, 0, 255);
                             border-radius: 4px;
                             padding: 0px 4px;
+                            font-weight: bold;
                         }
 
                     </style>
