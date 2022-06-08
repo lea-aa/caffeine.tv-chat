@@ -337,13 +337,10 @@ javascript:(function(){
 
                     var mensajeHtml = `<hr style="margin: 0px; border: 1px solid #4d4d70;"/>
                                         <div class="mensaje" >
-                                            <span class="nombre-usuario" style="color: ${get_usuario_color(usuario)}">
-                                                ${usuario}
-                                            </span><span class="upvotes"></span>
+                                            <span class="nombre-usuario" style="color: ${get_usuario_color(usuario)}">${usuario}</span>
+                                            <span class="upvotes"></span>
                                             :
-                                            <span class="texto-mensaje">
-                                                ${texto_con_url}
-                                            </span>
+                                            <span class="texto-mensaje">${texto_con_url}</span>
                                         </div>`;
                     mensajesdiv.innerHTML += mensajeHtml;
 
@@ -363,9 +360,15 @@ javascript:(function(){
                     let mensajes_en_chat = document.getElementsByClassName("mensaje");
                     for (let i = mensajes_en_chat.length - 1; i > 0; i--) {
                         const element = mensajes_en_chat[i];
-                        var regex_str = `^(${usuario})( \\d+)? : (${texto})$`;
-                        var regex = new RegExp(regex_str);
-                        if (regex.test(element.innerText)) {
+                        var usuario_en_chat = element.getElementsByClassName("nombre-usuario")[0].innerText;
+                        var texto_en_chat = element.getElementsByClassName("texto-mensaje")[0].innerText;
+
+                        console.log(usuario);
+                        console.log(usuario_en_chat);
+                        console.log(texto);
+                        console.log(texto_en_chat);
+                        
+                        if (usuario == usuario_en_chat && texto == texto_en_chat) {
                             element.getElementsByClassName("upvotes")[0].innerText = upvotes;
                             break;
                         }
