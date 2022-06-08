@@ -1,7 +1,8 @@
 javascript:(function(){
     /*
-        Version: 2022-06-06T18:03:53
-        upvotes implementados
+        Version: 2022-06-08 17:43:13
+        se movieron todas las funciones y variables de iniciar chat afuera asi son globales para usar en addchat()
+        se implemento la config con font-size para cambiar
     */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
@@ -46,6 +47,7 @@ javascript:(function(){
                             --color-letra: #ffffffcc;
                             --color-fondo: #28283a;
                             --color-bordes: #4d4d70;
+                            --font-size: ${font_size}px;
                         }
 
                         #caja{
@@ -103,11 +105,12 @@ javascript:(function(){
                             font-family: "Poppins","Roboto",sans-serif;
                             background-color: var(--color-fondo);
                             transition: all 0.5s ease-in-out;
+                            font-size: var(--font-size);
                         }
 
                         .mensaje:hover{
                             filter: brightness(120%);
-                            font-size: 15px;
+                            font-size: calc(var(--font-size) * 1.2);
                         }
 
                         .mensaje a{
@@ -209,6 +212,35 @@ javascript:(function(){
                             font-weight: bold;
                         }
 
+                        #config{    
+                            background-color: var(--color-bordes);                
+                            display: block;
+                            padding: 0px 5px;
+                            margin: 5px 0px;
+                            border-radius: 8px;
+                            font-size: 15px;                
+                            transition: max-height 0.2s ease-out;
+                            max-height: 0;
+                            overflow: hidden;
+                        }
+            
+                        #tamanio_texto{
+                            padding: 5px 0px;
+                            margin-left: 5px;
+                        }
+                        
+                        button{
+                            background-color: var(--color-fondo);
+                            color: var(--color-letra);
+                            border: 2px solid var(--color-letra);
+                            border-radius: 5px;
+                            cursor: pointer;
+                        }
+            
+                        button:active{
+                            background-color: var(--color-bordes);
+                        }
+
                     </style>
                     <div id="caja">
                         <div id="cajaheader">
@@ -216,7 +248,12 @@ javascript:(function(){
                                 <span id="emoji" class="emoji">🤓</span>👆
                             </div>
                             <div id="arrastrable">👇 el chat <span class="emoji">🤪</span></div>
-                            <div id="botones-ventana"><span id="extraer"> 🔳 </span>|<span id="cerrar"> x </span></div>
+                            <div id="botones-ventana"><span id="config_boton"> ⚙ </span>|<span id="extraer"> 🔳 </span>|<span id="cerrar"> x </span></div>
+                        </div>
+                        <div id="config">
+                            <div id="tamanio_texto">
+                                Tamaño de texto: <button id="aumentar_tamaño_texto">+</button> <button id="disminuir_tamaño_texto">-</button>
+                            </div>
                         </div>
                         <div id="mensajesdiv"></div>
                     </div>`;
@@ -291,159 +328,154 @@ javascript:(function(){
         }
     }
 
-    function inicializar_chat(){
-        const caja_mensajes_class = "reaction__reaction___1LNsk";
+    
+    const caja_mensajes_class = "reaction__reaction___1LNsk";
 
-        const contenido_mensajes_class = "reaction-body__redesign_reactionBody___2a9UP";
+    const contenido_mensajes_class = "reaction-body__redesign_reactionBody___2a9UP";
 
-        const usuario_mensaje_class = "reaction-footer__redesign_reactionFooter___yeGFN";
+    const usuario_mensaje_class = "reaction-footer__redesign_reactionFooter___yeGFN";
 
-        const upvotes_mensaje_class = "reaction-badge__redesign_count___767MF";
+    const upvotes_mensaje_class = "reaction-badge__redesign_count___767MF";
 
-        const url_regex_checker = /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/;
+    const url_regex_checker = /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/;
 
-        function mostrar_mensajes(){
-            if (mensajes.length > max_mensajes_dup){
-                mensajes.shift();
-            }
+    function mostrar_mensajes(){
+        if (mensajes.length > max_mensajes_dup){
+            mensajes.shift();
+        }
 
-            var caja_mensajes = document.getElementsByClassName(caja_mensajes_class);
+        var caja_mensajes = document.getElementsByClassName(caja_mensajes_class);
 
-            /** itera sobre las cajas y muestra el contenido */
-            for (var i = 0; i < caja_mensajes.length; i++){
-                var usuario = caja_mensajes[i].getElementsByClassName(usuario_mensaje_class)[0].innerText;
-                var texto = caja_mensajes[i].getElementsByClassName(contenido_mensajes_class)[0].innerText.replace("\n", " ");
-                var upvotes = caja_mensajes[i].getElementsByClassName(upvotes_mensaje_class)[0].innerText;
+        /** itera sobre las cajas y muestra el contenido */
+        for (var i = 0; i < caja_mensajes.length; i++){
+            var usuario = caja_mensajes[i].getElementsByClassName(usuario_mensaje_class)[0].innerText;
+            var texto = caja_mensajes[i].getElementsByClassName(contenido_mensajes_class)[0].innerText.replace("\n", " ");
+            var upvotes = caja_mensajes[i].getElementsByClassName(upvotes_mensaje_class)[0].innerText;
 
-                var mensaje = usuario + ":" + texto;
+            var mensaje = usuario + ":" + texto;
 
-                if (!mensajes.includes(mensaje)){
-                    /*console.log(mensaje);*/
-                    mensajes.push(mensaje);
+            if (!mensajes.includes(mensaje)){
+                /*console.log(mensaje);*/
+                mensajes.push(mensaje);
 
-                    var texto_con_url = texto;
+                var texto_con_url = texto;
 
-                    var texto_url_match = texto_con_url.match(url_regex_checker);
+                var texto_url_match = texto_con_url.match(url_regex_checker);
 
-                    if (texto_url_match != null) {
-                        var url_matched = texto_url_match[0];
+                if (texto_url_match != null) {
+                    var url_matched = texto_url_match[0];
 
-                        if(!/http(s)?:\/\//.test(url_matched)){
-                            url_matched = "http://" + url_matched;
-                        }
-
-                        texto_con_url = texto_con_url.replace(texto_url_match[0], `<a href="${url_matched}" target="_blank">${texto_url_match[0]}</a>`);
+                    if(!/http(s)?:\/\//.test(url_matched)){
+                        url_matched = "http://" + url_matched;
                     }
 
-                    var mensajeHtml = `<hr style="margin: 0px; border: 1px solid #4d4d70;"/>
-                                        <div class="mensaje" >
-                                            <span class="nombre-usuario" style="color: ${get_usuario_color(usuario)}">${usuario}</span>
-                                            <span class="upvotes"></span>
-                                            :
-                                            <span class="texto-mensaje">${texto_con_url}</span>
-                                        </div>`;
-                    mensajesdiv.innerHTML += mensajeHtml;
-
-                    var mensajes_divs = document.getElementsByClassName("mensaje");
-
-                    if (auto_scroll){
-                        mensajes_divs[mensajes_divs.length - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-                    }
-
-                    if (typeof pop_out_chat != "undefined") {
-                        var pop_out_chat_messajes_html = pop_out_chat.document.getElementById("mensajesdiv");
-                        pop_out_chat_messajes_html.innerHTML += mensajeHtml;
-                    }
+                    texto_con_url = texto_con_url.replace(texto_url_match[0], `<a href="${url_matched}" target="_blank">${texto_url_match[0]}</a>`);
                 }
 
-                if(upvotes != ""){
-                    let mensajes_en_chat = document.getElementsByClassName("mensaje");
-                    for (let i = mensajes_en_chat.length - 1; i > 0; i--) {
-                        const element = mensajes_en_chat[i];
-                        var usuario_en_chat = element.getElementsByClassName("nombre-usuario")[0].innerText;
-                        var texto_en_chat = element.getElementsByClassName("texto-mensaje")[0].innerText;
+                var mensajeHtml = `<hr style="margin: 0px; border: 1px solid #4d4d70;"/>
+                                    <div class="mensaje" >
+                                        <span class="nombre-usuario" style="color: ${get_usuario_color(usuario)}">${usuario}</span>
+                                        <span class="upvotes"></span>
+                                        :
+                                        <span class="texto-mensaje">${texto_con_url}</span>
+                                    </div>`;
+                mensajesdiv.innerHTML += mensajeHtml;
 
-                        console.log(usuario);
-                        console.log(usuario_en_chat);
-                        console.log(texto);
-                        console.log(texto_en_chat);
-                        
-                        if (usuario == usuario_en_chat && texto == texto_en_chat) {
-                            element.getElementsByClassName("upvotes")[0].innerText = upvotes;
-                            break;
-                        }
-                    }
+                var mensajes_divs = document.getElementsByClassName("mensaje");
+
+                if (auto_scroll){
+                    mensajes_divs[mensajes_divs.length - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
                 }
 
+                if (typeof pop_out_chat != "undefined") {
+                    var pop_out_chat_messajes_html = pop_out_chat.document.getElementById("mensajesdiv");
+                    pop_out_chat_messajes_html.innerHTML += mensajeHtml;
+                }
             }
 
-            window.setTimeout( function () { mostrar_mensajes(); }, tiempo_espera );
+            if(upvotes != ""){
+                let mensajes_en_chat = document.getElementsByClassName("mensaje");
+                for (let i = mensajes_en_chat.length - 1; i >= 0; i--) {
+                    const element = mensajes_en_chat[i];
+                    var usuario_en_chat = element.getElementsByClassName("nombre-usuario")[0].innerText;
+                    var texto_en_chat = element.getElementsByClassName("texto-mensaje")[0].innerText;
+
+                    if (usuario == usuario_en_chat && texto == texto_en_chat) {
+                        element.getElementsByClassName("upvotes")[0].innerText = upvotes;
+                        break;
+                    }
+                }
+            }
+
         }
 
-        function get_usuario_color(nombre_usuario){
-            if(!(nombre_usuario in usuarios_colores)){
-                usuarios_colores[nombre_usuario] = generar_color(nombre_usuario);
-            }
+        window.setTimeout( function () { mostrar_mensajes(); }, tiempo_espera );
+    }
 
-            return usuarios_colores[nombre_usuario];
+    function get_usuario_color(nombre_usuario){
+        if(!(nombre_usuario in usuarios_colores)){
+            usuarios_colores[nombre_usuario] = generar_color(nombre_usuario);
         }
 
-        function generar_color(nombre_usuario){
-            /* sacar el "hash" para que sea siempre random, dejarlo para que sea siempre el mismo color para ese usuario pero no se puede elegir */
-            var lightColor='hsl('+generar_numero(nombre_usuario, "hash")+',100%,75%)';
+        return usuarios_colores[nombre_usuario];
+    }
 
-            return lightColor;
+    function generar_color(nombre_usuario){
+        /* sacar el "hash" para que sea siempre random, dejarlo para que sea siempre el mismo color para ese usuario pero no se puede elegir */
+        var lightColor='hsl('+generar_numero(nombre_usuario, "hash")+',100%,75%)';
+
+        return lightColor;
+    }
+
+    function generar_numero(nombre_usuario, tipo = undefined){
+        if (tipo == "hash"){
+            return cyrb53(nombre_usuario) % 361;
         }
-
-        function generar_numero(nombre_usuario, tipo = undefined){
-            if (tipo == "hash"){
-                return cyrb53(nombre_usuario) % 361;
-            }
-            else{
-                return Math.floor(Math.random()*361);
-            }
+        else{
+            return Math.floor(Math.random()*361);
         }
+    }
 
-        const cyrb53 = function(str, seed = 0) {
-            let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
-            for (let i = 0, ch; i < str.length; i++) {
-                ch = str.charCodeAt(i);
-                h1 = Math.imul(h1 ^ ch, 2654435761);
-                h2 = Math.imul(h2 ^ ch, 1597334677);
-            }
-            h1 = Math.imul(h1 ^ (h1>>>16), 2246822507) ^ Math.imul(h2 ^ (h2>>>13), 3266489909);
-            h2 = Math.imul(h2 ^ (h2>>>16), 2246822507) ^ Math.imul(h1 ^ (h1>>>13), 3266489909);
-            return 4294967296 * (2097151 & h2) + (h1>>>0);
-        };
+    const cyrb53 = function(str, seed = 0) {
+        let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+        for (let i = 0, ch; i < str.length; i++) {
+            ch = str.charCodeAt(i);
+            h1 = Math.imul(h1 ^ ch, 2654435761);
+            h2 = Math.imul(h2 ^ ch, 1597334677);
+        }
+        h1 = Math.imul(h1 ^ (h1>>>16), 2246822507) ^ Math.imul(h2 ^ (h2>>>13), 3266489909);
+        h2 = Math.imul(h2 ^ (h2>>>16), 2246822507) ^ Math.imul(h1 ^ (h1>>>13), 3266489909);
+        return 4294967296 * (2097151 & h2) + (h1>>>0);
+    };
 
-        var usuarios_colores = {};
+    var usuarios_colores = {};
 
-        var mensajesdiv = document.getElementById("mensajesdiv");
+    var mensajesdiv = document.getElementById("mensajesdiv");
 
-        var auto_scroll = true;
+    var auto_scroll = true;
 
-        var caja = document.getElementById("caja");
+    var caja = document.getElementById("caja");
 
-        caja.addEventListener("mouseenter", function(){
-            auto_scroll = false;
-            /*console.log("in");*/
-        }, false);
+    caja.addEventListener("mouseenter", function(){
+        auto_scroll = false;
+        /*console.log("in");*/
+    }, false);
 
-        caja.addEventListener("mouseleave", function(){
-            auto_scroll = true;
-            /*console.log("out");*/
-        }, false);
+    caja.addEventListener("mouseleave", function(){
+        auto_scroll = true;
+        /*console.log("out");*/
+    }, false);
 
-        var boton_cerrar = document.getElementById("cerrar");
+    var boton_cerrar = document.getElementById("cerrar");
 
-        boton_cerrar.addEventListener("click", function(){
-            caja.style.visibility = "hidden";
-        }, false);
+    boton_cerrar.addEventListener("click", function(){
+        caja.style.visibility = "hidden";
+    }, false);
 
-        var boton_ayuda = document.getElementById("emojitext");
+    var boton_ayuda = document.getElementById("emojitext");
 
-        boton_ayuda.addEventListener("click", function(){
-            alert(`¿Cómo funciona el chat?\n
+    boton_ayuda.addEventListener("click", function(){
+        alert(`¿Cómo funciona el chat?\n
 Cada 2 segundos revisa si hay un globito nuevo de chat y si hay, lo agrega a la lista. \n
 Si la ventana del stream no esta visible en la pantalla (minimizada o hay otra ventana maximizada encima) los globitos no salen y los mensajes no van a quedar registrados.\n
 \n
@@ -452,48 +484,75 @@ Podés mover la ventanita arrastrandola desde la parte de arriba donde está el 
 Con la X de arriba a la derecha podes cerrarlo y para abrirlo otra vez solo tenes que volver a tocar el marcador.\n
 Con el cuadrado al lado de la x podes sacar el chat a otra ventana pero por ahora no tiene el auto scroll.\n
 También podes cambiar el tamaño desde la esquina inferior derecha.\n
+Tocando el engranaje accedes a la configuración en la que por ahora se puede cambiar el tamaño del texto de los mensajes, tocandolo otra vez se vuelve a esconder el panel de configuración\n
 \n
 Dato extra.\n
 Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te podes dar cuenta porque la barrita de scroll cambia de color.`)
-        }, false);
+    }, false);
 
-        var pop_out_chat;
+    var pop_out_chat;
 
-        var boton_extraer = document.getElementById("extraer");
+    var boton_extraer = document.getElementById("extraer");
 
-        boton_extraer.addEventListener("click", function(){
-            pop_out_chat = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=600,top="+(screen.height-700)+",left="+(screen.width-500));
-            pop_out_chat.document.body.innerHTML = document.getElementsByClassName("cajota")[0].innerHTML;
-            pop_out_chat.document.getElementById("caja").style.top = "0";
-            pop_out_chat.document.getElementById("caja").style.left = "0";
-            pop_out_chat.document.getElementById("caja").style.width = "calc(100% - 16px)";
-            pop_out_chat.document.getElementById("caja").style.height = "calc(100% - 16px)";
-            pop_out_chat.document.body.style.background = "black";
-        }, false);
+    boton_extraer.addEventListener("click", function(){
+        pop_out_chat = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=600,top="+(screen.height-700)+",left="+(screen.width-500));
+        pop_out_chat.document.body.innerHTML = document.getElementsByClassName("cajota")[0].innerHTML;
+        pop_out_chat.document.getElementById("caja").style.top = "0";
+        pop_out_chat.document.getElementById("caja").style.left = "0";
+        pop_out_chat.document.getElementById("caja").style.width = "calc(100% - 16px)";
+        pop_out_chat.document.getElementById("caja").style.height = "calc(100% - 16px)";
+        pop_out_chat.document.body.style.background = "black";
+    }, false);
 
-        window.caja = caja;
+    var font_size = 12;
 
-        /* para contar las repeticiones y cada x tiempo limpiar el array de mensajes */
+    var boton_aumentar_texto = document.getElementById("aumentar_tamaño_texto");
+    boton_aumentar_texto.addEventListener("click", function(){
+        var r  = document.querySelector(":root");       
+        font_size === 100 ? font_size : ++font_size;
+        r.style.setProperty("--font-size", font_size + "px");
+        console.log(font_size);
+    }, false);
 
-        /*const tiempo_limpiar = 60;
+    var boton_disminuir_texto = document.getElementById("disminuir_tamaño_texto");
+    boton_disminuir_texto.addEventListener("click", function(){
+        var r  = document.querySelector(":root");   
+        font_size === 0 ? font_size : --font_size;         
+        r.style.setProperty("--font-size", font_size + "px");
+        console.log(font_size);
+    }, false);
 
-        var rep = 0;
+    var boton_cofig = document.getElementById("config_boton");
+    boton_cofig.addEventListener("click", function(){
+        var config_div = document.getElementById("config");
+        if (config_div.style.maxHeight){
+            config_div.style.maxHeight = null;
+        }
+        else{
+            config_div.style.maxHeight = config_div.scrollHeight + "px";
+        }
+    }, false);
 
-        const max_rep = tiempo_limpiar / segundos_espera;*/
+    window.caja = caja;
+
+    /* para contar las repeticiones y cada x tiempo limpiar el array de mensajes */
+
+    /*const tiempo_limpiar = 60;
+
+    var rep = 0;
+
+    const max_rep = tiempo_limpiar / segundos_espera;*/
 
 
-        var mensajes = new Array();
+    var mensajes = new Array();
 
-        const segundos_espera = 1;
+    const segundos_espera = 1;
 
-        const tiempo_espera = 1000 * segundos_espera;
+    const tiempo_espera = 1000 * segundos_espera;
 
-        /* para contar cuantos mensajes maximos a almacenar para evitar mostrarlo duplicado */
-        const max_mensajes_dup = 10;
+    /* para contar cuantos mensajes maximos a almacenar para evitar mostrarlo duplicado */
+    const max_mensajes_dup = 10;
 
-        window.setTimeout( function () { mostrar_mensajes(); }, tiempo_espera );
-    }
-
-    inicializar_chat();
+    mostrar_mensajes();    
 
 })();
