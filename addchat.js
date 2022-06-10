@@ -1,8 +1,8 @@
 javascript:(function(){
     /*
-        Version: 2022-06-08 17:43:13
-        se movieron todas las funciones y variables de iniciar chat afuera asi son globales para usar en addchat()
-        se implemento la config con font-size para cambiar
+        Version: 2022-06-10 18:08:44Z
+        se cambio la posicion del panel de config para que al aparecer y desaparecer no mueva el chat
+        se agrego el css de rotacion al boton de config y un margen porque al hacerlo inline-block, ignora los espacios
     */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
@@ -222,6 +222,8 @@ javascript:(function(){
                             transition: max-height 0.2s ease-out;
                             max-height: 0;
                             overflow: hidden;
+                            position: fixed;
+                            z-index: 51;
                         }
             
                         #tamanio_texto{
@@ -241,6 +243,10 @@ javascript:(function(){
                             background-color: var(--color-bordes);
                         }
 
+                        #config_boton {
+                            margin: 0px 5px;
+                        }
+
                     </style>
                     <div id="caja">
                         <div id="cajaheader">
@@ -248,7 +254,7 @@ javascript:(function(){
                                 <span id="emoji" class="emoji">🤓</span>👆
                             </div>
                             <div id="arrastrable">👇 el chat <span class="emoji">🤪</span></div>
-                            <div id="botones-ventana"><span id="config_boton"> ⚙ </span>|<span id="extraer"> 🔳 </span>|<span id="cerrar"> x </span></div>
+                            <div id="botones-ventana"><span class="emoji" id="config_boton"> ⚙ </span>|<span id="extraer"> 🔳 </span>|<span id="cerrar"> x </span></div>
                         </div>
                         <div id="config">
                             <div id="tamanio_texto">
