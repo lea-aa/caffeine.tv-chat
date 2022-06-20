@@ -41,6 +41,12 @@ javascript:(function(){
         console.log("No se pudo encontrar el elemento para alinear el reproductor");
     }
 
+    var font_size = localStorage.getItem("font_size");
+
+    if (!font_size) {
+        font_size = 15;
+    }
+
     function addChat(){
         chatHTML = `<style>
                         :root{
@@ -508,24 +514,26 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
         pop_out_chat.document.getElementById("caja").style.width = "calc(100% - 16px)";
         pop_out_chat.document.getElementById("caja").style.height = "calc(100% - 16px)";
         pop_out_chat.document.body.style.background = "black";
-    }, false);
-
-    var font_size = 12;
+    }, false);    
 
     var boton_aumentar_texto = document.getElementById("aumentar_tamaño_texto");
     boton_aumentar_texto.addEventListener("click", function(){
-        var r  = document.querySelector(":root");       
-        font_size === 100 ? font_size : ++font_size;
+        var r  = document.querySelector(":root");
+        if (font_size < 100) {
+            font_size++;                    
+            localStorage.setItem("font_size", font_size)   
+        }
         r.style.setProperty("--font-size", font_size + "px");
-        console.log(font_size);
     }, false);
 
     var boton_disminuir_texto = document.getElementById("disminuir_tamaño_texto");
     boton_disminuir_texto.addEventListener("click", function(){
-        var r  = document.querySelector(":root");   
-        font_size === 0 ? font_size : --font_size;         
+        var r  = document.querySelector(":root");
+        if (font_size > 0){
+            font_size--;
+            localStorage.setItem("font_size", font_size)   
+        }
         r.style.setProperty("--font-size", font_size + "px");
-        console.log(font_size);
     }, false);
 
     var boton_cofig = document.getElementById("config_boton");
