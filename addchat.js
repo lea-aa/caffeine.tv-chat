@@ -228,7 +228,12 @@ javascript:(function(){
                             transition: max-height 0.2s ease-out;
                             max-height: 0;
                             overflow: hidden;
-                            position: fixed;
+                        }
+                        
+                        #config-container{
+                            position: sticky; 
+                            height: 0; 
+                            top: 32px;
                             z-index: 51;
                         }
             
@@ -262,9 +267,11 @@ javascript:(function(){
                             <div id="arrastrable">👇 el chat <span class="emoji">🤪</span></div>
                             <div id="botones-ventana"><span class="emoji" id="config_boton"> ⚙ </span>|<span id="extraer"> 🔳 </span>|<span id="cerrar"> x </span></div>
                         </div>
-                        <div id="config">
-                            <div id="tamanio_texto">
-                                Tamaño de texto: <button id="aumentar_tamaño_texto">+</button> <button id="disminuir_tamaño_texto">-</button>
+                        <div id="config-container">
+                            <div id="config">
+                                <div id="tamanio_texto">
+                                    Tamaño de texto: <button id="aumentar_tamaño_texto">+</button> <button id="disminuir_tamaño_texto">-</button>
+                                </div>
                             </div>
                         </div>
                         <div id="mensajesdiv"></div>
