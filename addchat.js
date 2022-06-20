@@ -1,6 +1,6 @@
 javascript:(function(){
     /*
-        Version: 2022-06-10 18:08:44Z
+        Version: 2022-06-20 03:06:46
         se cambio la posicion del panel de config para que al aparecer y desaparecer no mueva el chat
         se agrego el css de rotacion al boton de config y un margen porque al hacerlo inline-block, ignora los espacios
     */
