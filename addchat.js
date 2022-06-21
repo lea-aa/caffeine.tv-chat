@@ -1,8 +1,7 @@
 javascript:(function(){
     /*
-        Version: 2022-06-21 18:03:03
-        save position and size of chat window when checkbox is checked and window is moved
-        but it won't save on resize yet
+        Version: 2022-06-21 18:15:40
+        save position on chat resize
     */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
@@ -609,6 +608,14 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
             localStorage.removeItem("guardar_posicion_checked");  
         }
     }, false);
+
+    const observer = new ResizeObserver(mutations => {
+        if (save_config_checkbox.checked) {
+            guardar_posiciones();
+        }
+    });
+
+    observer.observe(caja);
 
     window.caja = caja;
 
