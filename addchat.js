@@ -1,7 +1,8 @@
 javascript:(function(){
     /*
-        Version: 2022-06-21 16:33:03Z
-        simple css rules moved from config panel
+        Version: 2022-06-21 18:03:03
+        save position and size of chat window when checkbox is checked and window is moved
+        but it won't save on resize yet
     */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
@@ -271,6 +272,10 @@ javascript:(function(){
                                 <div>
                                     Tamaño de texto: <button id="aumentar_tamaño_texto">+</button> <button id="disminuir_tamaño_texto">-</button>
                                 </div>
+                                <div>
+                                    <label for="guardar_posicion">Guardar posición de la ventana: </label>
+                                    <input type="checkbox" name="guardar_posicion" id="guardar_posicion">
+                                </div>
                             </div>
                         </div>
                         <div id="mensajesdiv"></div>
@@ -278,30 +283,43 @@ javascript:(function(){
 
         document.getElementsByClassName("cajota")[0].innerHTML = chatHTML;
 
-        const top_bar_height_class = "header__redesign_header___2usis";
-        var top_bar_height = 56;
-
-        try {
-            document.getElementsByClassName(top_bar_height_class)[0].offsetHeight;
-        } catch (error) {
-            console.log(error);
-            console.log("No se pudo encontrar el elemento top_bar (barra superior)");
-        }
-
-        var reproductor_width = 800, reproductor_height = 470;
-
-        if (typeof reproductor != "undefined") {
-            reproductor_height = reproductor.offsetHeight;
-            reproductor_width = reproductor.offsetWidth;
-        }
-
         var caja = document.getElementById("caja");
-        caja.style.top = top_bar_height + 10 + "px";
-        caja.style.left = reproductor_width + 10 + "px";
-        caja.style.width = document.body.clientWidth - reproductor_width - 20 + "px";
-        caja.style.height = reproductor_height - caja.offsetTop + "px";
+
+        if(localStorage.getItem("cajaX") && localStorage.getItem("cajaY") && 
+        localStorage.getItem("cajaWidth") && localStorage.getItem("cajaHeight")){
+            caja.style.top = localStorage.getItem("cajaX") + "px";
+            caja.style.left = localStorage.getItem("cajaY") + "px";
+            caja.style.width = localStorage.getItem("cajaWidth") + "px";
+            caja.style.height = localStorage.getItem("cajaHeight") + "px";
+        }
+        else{
+            const top_bar_height_class = "header__redesign_header___2usis";
+            var top_bar_height = 56;
+    
+            try {
+                document.getElementsByClassName(top_bar_height_class)[0].offsetHeight;
+            } catch (error) {
+                console.log(error);
+                console.log("No se pudo encontrar el elemento top_bar (barra superior)");
+            }
+    
+            var reproductor_width = 800, reproductor_height = 470;
+    
+            if (typeof reproductor != "undefined") {
+                reproductor_height = reproductor.offsetHeight;
+                reproductor_width = reproductor.offsetWidth;
+            }
+    
+            caja.style.top = top_bar_height + 10 + "px";
+            caja.style.left = reproductor_width + 10 + "px";
+            caja.style.width = document.body.clientWidth - reproductor_width - 20 + "px";
+            caja.style.height = reproductor_height - caja.offsetTop + "px";
+        }
+
     }
     addChat();
+
+    const save_config_checkbox = document.getElementById("guardar_posicion");
 
     /* Make the DIV element draggable: */
     dragElement(document.getElementById("caja"));
@@ -343,6 +361,10 @@ javascript:(function(){
             /* stop moving when mouse button is released: */
             document.onmouseup = null;
             document.onmousemove = null;
+
+            if (save_config_checkbox.checked) {
+                guardar_posiciones();
+            }
         }
     }
 
@@ -466,6 +488,25 @@ javascript:(function(){
         return 4294967296 * (2097151 & h2) + (h1>>>0);
     };
 
+    const guardar_posiciones = () => {
+        const pos = caja.getBoundingClientRect();
+
+        localStorage.setItem("guardar_posicion_checked", "true");
+
+        localStorage.setItem("cajaX", pos.top);
+        localStorage.setItem("cajaY", pos.left);
+        localStorage.setItem("cajaWidth", pos.width);
+        localStorage.setItem("cajaHeight", pos.height);      
+        console.log("guardado") ;
+    };
+
+    const reestablecer_posiciones = () => {
+        localStorage.removeItem("cajaX");
+        localStorage.removeItem("cajaY");
+        localStorage.removeItem("cajaWidth");
+        localStorage.removeItem("cajaHeight");
+    };
+
     var usuarios_colores = {};
 
     var mensajesdiv = document.getElementById("mensajesdiv");
@@ -550,6 +591,22 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
         }
         else{
             config_div.style.maxHeight = config_div.scrollHeight + "px";
+        }
+    }, false);
+
+    /* CheckBox guardar_posicion */   
+
+    if(localStorage.getItem("guardar_posicion_checked")){
+        save_config_checkbox.checked = true;
+    }
+
+    save_config_checkbox.addEventListener("change", element => {
+        if (element.originalTarget.checked) {
+            guardar_posiciones();        
+        }
+        else{
+            reestablecer_posiciones();          
+            localStorage.removeItem("guardar_posicion_checked");  
         }
     }, false);
 
