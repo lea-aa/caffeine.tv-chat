@@ -1,8 +1,7 @@
 javascript:(function(){
     /*
-        Version: 2022-06-20 03:06:46
-        se cambio la posicion del panel de config para que al aparecer y desaparecer no mueva el chat
-        se agrego el css de rotacion al boton de config y un margen porque al hacerlo inline-block, ignora los espacios
+        Version: 2022-06-21 16:33:03Z
+        simple css rules moved from config panel
     */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
@@ -217,7 +216,14 @@ javascript:(function(){
                             padding: 0px 4px;
                             font-weight: bold;
                         }
-
+                        
+                        #config-container{
+                            position: sticky; 
+                            height: 0; 
+                            top: 32px;
+                            z-index: 51;
+                        }
+                        
                         #config{    
                             background-color: var(--color-bordes);                
                             display: block;
@@ -229,15 +235,8 @@ javascript:(function(){
                             max-height: 0;
                             overflow: hidden;
                         }
-                        
-                        #config-container{
-                            position: sticky; 
-                            height: 0; 
-                            top: 32px;
-                            z-index: 51;
-                        }
-            
-                        #tamanio_texto{
+                            
+                        #config div{
                             padding: 5px 0px;
                             margin-left: 5px;
                         }
@@ -269,7 +268,7 @@ javascript:(function(){
                         </div>
                         <div id="config-container">
                             <div id="config">
-                                <div id="tamanio_texto">
+                                <div>
                                     Tamaño de texto: <button id="aumentar_tamaño_texto">+</button> <button id="disminuir_tamaño_texto">-</button>
                                 </div>
                             </div>
