@@ -1,7 +1,7 @@
 javascript:(function(){
     /*
-        Version: 2022-06-21 18:15:40
-        save position on chat resize
+        Version: 2022-06-21 18:39:24
+        fix wrong position when used top instead of offsetTop
     */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
@@ -286,8 +286,8 @@ javascript:(function(){
 
         if(localStorage.getItem("cajaX") && localStorage.getItem("cajaY") && 
         localStorage.getItem("cajaWidth") && localStorage.getItem("cajaHeight")){
-            caja.style.top = localStorage.getItem("cajaX") + "px";
-            caja.style.left = localStorage.getItem("cajaY") + "px";
+            caja.style.left = localStorage.getItem("cajaX") + "px";
+            caja.style.top = localStorage.getItem("cajaY") + "px";
             caja.style.width = localStorage.getItem("cajaWidth") + "px";
             caja.style.height = localStorage.getItem("cajaHeight") + "px";
         }
@@ -492,8 +492,8 @@ javascript:(function(){
 
         localStorage.setItem("guardar_posicion_checked", "true");
 
-        localStorage.setItem("cajaX", pos.top);
-        localStorage.setItem("cajaY", pos.left);
+        localStorage.setItem("cajaX", caja.offsetLeft);
+        localStorage.setItem("cajaY", caja.offsetTop);
         localStorage.setItem("cajaWidth", pos.width);
         localStorage.setItem("cajaHeight", pos.height);      
         console.log("guardado") ;
