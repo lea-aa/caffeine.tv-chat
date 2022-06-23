@@ -1,7 +1,7 @@
 javascript:(function(){
     /*
-        Version: 2022-06-21 18:39:24
-        fix wrong position when used top instead of offsetTop
+        Version: 2022-06-23 20:55:02
+        changed all localStorage variables for a single object with all the properties
     */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
@@ -40,11 +40,23 @@ javascript:(function(){
         console.log("No se pudo encontrar el elemento para alinear el reproductor");
     }
 
-    var font_size = localStorage.getItem("font_size");
+    /**
+     * store the chat config
+     * fs: font size of chat messages
+     * dT: default top of chat box, Y coord
+     * dL: default left of chat box, X coord
+     * dW: default width of chat box
+     * dH: default height if chat box
+     * pos_size: array of saves positions and size of chat box
+     *      name: name of saved config
+     *      t: top of chat box, Y coord
+     *      l: left of chat box, X coord
+     *      w: width of chat box
+     *      h: height if chat box
+    */
+    var chat_config = JSON.parse(localStorage.getItem("chat_config")) ?? {};
 
-    if (!font_size) {
-        font_size = 15;
-    }
+    var font_size = chat_config.fs ?? 15;
 
     function addChat(){
         chatHTML = `<style>
@@ -284,12 +296,12 @@ javascript:(function(){
 
         var caja = document.getElementById("caja");
 
-        if(localStorage.getItem("cajaX") && localStorage.getItem("cajaY") && 
-        localStorage.getItem("cajaWidth") && localStorage.getItem("cajaHeight")){
-            caja.style.left = localStorage.getItem("cajaX") + "px";
-            caja.style.top = localStorage.getItem("cajaY") + "px";
-            caja.style.width = localStorage.getItem("cajaWidth") + "px";
-            caja.style.height = localStorage.getItem("cajaHeight") + "px";
+        if(chat_config.dL && chat_config.dT && 
+        chat_config.dW && chat_config.dH){
+            caja.style.left = chat_config.dL + "px";
+            caja.style.top = chat_config.dT + "px";
+            caja.style.width = chat_config.dW + "px";
+            caja.style.height = chat_config.dH + "px";
         }
         else{
             const top_bar_height_class = "header__redesign_header___2usis";
@@ -489,21 +501,26 @@ javascript:(function(){
 
     const guardar_posiciones = () => {
         const pos = caja.getBoundingClientRect();
+        
+        chat_config.dL = caja.offsetLeft;
+        chat_config.dT = caja.offsetTop;
+        chat_config.dW = pos.width;
+        chat_config.dH = pos.height;
 
-        localStorage.setItem("guardar_posicion_checked", "true");
-
-        localStorage.setItem("cajaX", caja.offsetLeft);
-        localStorage.setItem("cajaY", caja.offsetTop);
-        localStorage.setItem("cajaWidth", pos.width);
-        localStorage.setItem("cajaHeight", pos.height);      
-        console.log("guardado") ;
+        guardar_config();
     };
 
     const reestablecer_posiciones = () => {
-        localStorage.removeItem("cajaX");
-        localStorage.removeItem("cajaY");
-        localStorage.removeItem("cajaWidth");
-        localStorage.removeItem("cajaHeight");
+        chat_config.dL = null;
+        chat_config.dT = null;
+        chat_config.dW = null;
+        chat_config.dH = null;
+
+        guardar_config();
+    };
+
+    const guardar_config = () => {        
+        localStorage.setItem("chat_config", JSON.stringify(chat_config));
     };
 
     var usuarios_colores = {};
@@ -567,7 +584,8 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
         var r  = document.querySelector(":root");
         if (font_size < 100) {
             font_size++;                    
-            localStorage.setItem("font_size", font_size)   
+            chat_config.fs = font_size;
+            guardar_config();
         }
         r.style.setProperty("--font-size", font_size + "px");
     }, false);
@@ -577,7 +595,8 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
         var r  = document.querySelector(":root");
         if (font_size > 0){
             font_size--;
-            localStorage.setItem("font_size", font_size)   
+            chat_config.fs = font_size;
+            guardar_config();
         }
         r.style.setProperty("--font-size", font_size + "px");
     }, false);
@@ -604,8 +623,7 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
             guardar_posiciones();        
         }
         else{
-            reestablecer_posiciones();          
-            localStorage.removeItem("guardar_posicion_checked");  
+            reestablecer_posiciones();                      
         }
     }, false);
 
