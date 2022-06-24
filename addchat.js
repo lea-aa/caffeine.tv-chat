@@ -1,7 +1,7 @@
 javascript:(function(){
     /*
-        Version: 2022-06-23 23:41:05Z
-        implemented save current position as default and reset default position
+        Version: 2022-06-24 00:50:39Z
+        padding arround config and div sizing when hidding save default position button
     */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
@@ -240,7 +240,6 @@ javascript:(function(){
                         #config{    
                             background-color: var(--color-bordes);                
                             display: block;
-                            padding: 0px 5px;
                             margin: 5px 0px;
                             border-radius: 8px;
                             font-size: 15px;                
@@ -250,8 +249,7 @@ javascript:(function(){
                         }
                             
                         #config div{
-                            padding: 5px 0px;
-                            margin-left: 5px;
+                            padding: 5px;
                         }
                         
                         #caja button{
@@ -282,22 +280,24 @@ javascript:(function(){
                         </div>
                         <div id="config-container">
                             <div id="config">
-                                <div>
-                                    Tamaño de texto: <button id="aumentar_tamaño_texto">+</button> <button id="disminuir_tamaño_texto">-</button>
-                                </div>
-                                <div>
-                                    <label for="guardar_posicion_automaticamente">Guardar posición automaticamente: </label>
-                                    <input type="checkbox" name="guardar_posicion_automaticamente" id="guardar_posicion_automaticamente">
-                                </div>
-                                <div id="div_guardar_posicion_default">
-                                    <button id="guardar_posicion_default">
-                                        Guardar posición actual como default
-                                    </button>
-                                </div>
-                                <div>
-                                    <button id="reestablecer_posicion_default" onclick="reestablecer_posiciones()">
-                                        Reestabelcer posición guardada como default
-                                    </button>
+                                <div style="padding: 5px;">
+                                    <div>
+                                        Tamaño de texto: <button id="aumentar_tamaño_texto">+</button> <button id="disminuir_tamaño_texto">-</button>
+                                    </div>
+                                    <div>
+                                        <label for="guardar_posicion_automaticamente">Guardar posición automaticamente: </label>
+                                        <input type="checkbox" name="guardar_posicion_automaticamente" id="guardar_posicion_automaticamente">
+                                    </div>
+                                    <div id="div_guardar_posicion_default">
+                                        <button id="guardar_posicion_default">
+                                            Guardar posición actual como default
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button id="reestablecer_posicion_default" onclick="reestablecer_posiciones()">
+                                            Reestabelcer posición guardada como default
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -614,8 +614,8 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
     }, false);
 
     var boton_cofig = document.getElementById("config_boton");
+    var config_div = document.getElementById("config");
     boton_cofig.addEventListener("click", function(){
-        var config_div = document.getElementById("config");
         if (config_div.style.maxHeight){
             config_div.style.maxHeight = null;
         }
@@ -648,6 +648,7 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
             chat_config.autosave = false; 
             guardar_posicion_default_boton_div.style.display = "inherit";
             reestablecer_posiciones();                      
+            config_div.style.maxHeight = config_div.scrollHeight + "px";
         }
     }, false);
 
