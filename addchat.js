@@ -1,7 +1,7 @@
 javascript:(function(){
     /*
-        Version: 2022-06-24 00:50:39Z
-        padding arround config and div sizing when hidding save default position button
+        Version: 2022-06-24 16:40:52
+        tooltip text of config buttons
     */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
@@ -286,17 +286,20 @@ javascript:(function(){
                                     <div>
                                         Tamaño de texto: <button id="aumentar_tamaño_texto">+</button> <button id="disminuir_tamaño_texto">-</button>
                                     </div>
-                                    <div>
+                                    <div title="Guarda la posición y tamaño de la ventana de chat automáticamente cada vez que se mueve o se redomensiona sin necesidad de presionar el botón guardar">
                                         <label for="guardar_posicion_automaticamente">Guardar posición automaticamente: </label>
                                         <input type="checkbox" name="guardar_posicion_automaticamente" id="guardar_posicion_automaticamente">
                                     </div>
-                                    <div id="div_guardar_posicion_default">
+                                    <div id="div_guardar_posicion_default"
+                                        title="Guarda la posición y tamaño actual de la ventana de chat como default y si se mueve, 
+                                        la próxima vez que se cargue el chat, va a estar donde se guardó como default">
                                         <button id="guardar_posicion_default">
                                             Guardar posición actual como default
                                         </button>
                                     </div>
                                     <div>
-                                        <button id="reestablecer_posicion_default" onclick="reestablecer_posiciones()">
+                                        <button id="reestablecer_posicion_default"
+                                            title="Elimina la posicion guardada como default y deja que se posicione automaticamente a la derecha del reproductor">
                                             Reestablecer posición guardada como default
                                         </button>
                                     </div>
