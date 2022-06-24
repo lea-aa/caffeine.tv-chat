@@ -1,7 +1,7 @@
 javascript:(function(){
     /*
-        Version: 2022-06-24 20:10:35
-        save multiples positions and load them clicking a button
+        Version: 2022-06-24 20:16:58
+        replaces += for insertAdjacentHTML every time a message appear so it won't replace all the html inside the chat window
     */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
@@ -482,7 +482,7 @@ javascript:(function(){
                                         :
                                         <span class="texto-mensaje">${texto_con_url}</span>
                                     </div>`;
-                mensajesdiv.innerHTML += mensajeHtml;
+                mensajesdiv.insertAdjacentHTML("beforeend", mensajeHtml);
 
                 var mensajes_divs = document.getElementsByClassName("mensaje");
 
