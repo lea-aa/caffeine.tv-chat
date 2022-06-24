@@ -1,7 +1,7 @@
 javascript:(function(){
     /*
-        Version: 2022-06-23 20:55:02
-        changed all localStorage variables for a single object with all the properties
+        Version: 2022-06-23 23:41:05Z
+        implemented save current position as default and reset default position
     */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
@@ -42,17 +42,18 @@ javascript:(function(){
 
     /**
      * store the chat config
-     * fs: font size of chat messages
-     * dT: default top of chat box, Y coord
-     * dL: default left of chat box, X coord
-     * dW: default width of chat box
-     * dH: default height if chat box
-     * pos_size: array of saves positions and size of chat box
-     *      name: name of saved config
-     *      t: top of chat box, Y coord
-     *      l: left of chat box, X coord
-     *      w: width of chat box
-     *      h: height if chat box
+     * autosave: bool if position autosave is enabled
+     * fs: int font size of chat messages
+     * dT: int default top of chat box, Y coord
+     * dL: int default left of chat box, X coord
+     * dW: int default width of chat box
+     * dH: int default height if chat box
+     * pos_size: list of saves positions and size of chat box
+     *      name: string name of saved config
+     *      t: int top of chat box, Y coord
+     *      l: int left of chat box, X coord
+     *      w: int width of chat box
+     *      h: int height if chat box
     */
     var chat_config = JSON.parse(localStorage.getItem("chat_config")) ?? {};
 
@@ -253,15 +254,16 @@ javascript:(function(){
                             margin-left: 5px;
                         }
                         
-                        button{
+                        #caja button{
                             background-color: var(--color-fondo);
                             color: var(--color-letra);
                             border: 2px solid var(--color-letra);
                             border-radius: 5px;
                             cursor: pointer;
+                            padding: 5px 10px;
                         }
             
-                        button:active{
+                        #caja button:active{
                             background-color: var(--color-bordes);
                         }
 
@@ -284,8 +286,18 @@ javascript:(function(){
                                     Tamaño de texto: <button id="aumentar_tamaño_texto">+</button> <button id="disminuir_tamaño_texto">-</button>
                                 </div>
                                 <div>
-                                    <label for="guardar_posicion">Guardar posición de la ventana: </label>
-                                    <input type="checkbox" name="guardar_posicion" id="guardar_posicion">
+                                    <label for="guardar_posicion_automaticamente">Guardar posición automaticamente: </label>
+                                    <input type="checkbox" name="guardar_posicion_automaticamente" id="guardar_posicion_automaticamente">
+                                </div>
+                                <div id="div_guardar_posicion_default">
+                                    <button id="guardar_posicion_default">
+                                        Guardar posición actual como default
+                                    </button>
+                                </div>
+                                <div>
+                                    <button id="reestablecer_posicion_default" onclick="reestablecer_posiciones()">
+                                        Reestabelcer posición guardada como default
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -330,7 +342,7 @@ javascript:(function(){
     }
     addChat();
 
-    const save_config_checkbox = document.getElementById("guardar_posicion");
+    const save_config_checkbox = document.getElementById("guardar_posicion_automaticamente");
 
     /* Make the DIV element draggable: */
     dragElement(document.getElementById("caja"));
@@ -614,15 +626,27 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
 
     /* CheckBox guardar_posicion */   
 
-    if(localStorage.getItem("guardar_posicion_checked")){
+    const guardar_posicion_default_boton_div = document.getElementById("div_guardar_posicion_default");
+    const guardar_posicion_default_boton = document.getElementById("guardar_posicion_default");
+    const reestablecer_posicion_default_boton = document.getElementById("reestablecer_posicion_default");
+
+    guardar_posicion_default_boton.addEventListener("click", guardar_posiciones, false);
+    reestablecer_posicion_default_boton.addEventListener("click", reestablecer_posiciones, false);
+
+    if(chat_config.autosave){
         save_config_checkbox.checked = true;
+        guardar_posicion_default_boton_div.style.display = "none";
     }
 
     save_config_checkbox.addEventListener("change", element => {
         if (element.originalTarget.checked) {
+            chat_config.autosave = true; 
+            guardar_posicion_default_boton_div.style.display = "none";
             guardar_posiciones();        
         }
         else{
+            chat_config.autosave = false; 
+            guardar_posicion_default_boton_div.style.display = "inherit";
             reestablecer_posiciones();                      
         }
     }, false);
