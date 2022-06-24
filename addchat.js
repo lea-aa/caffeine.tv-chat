@@ -259,6 +259,8 @@ javascript:(function(){
                             border-radius: 5px;
                             cursor: pointer;
                             padding: 5px 10px;
+                            font-family: "Poppins","Roboto",sans-serif !important;
+                            font-weight: 500;
                         }
             
                         #caja button:active{
