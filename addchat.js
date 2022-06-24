@@ -1,7 +1,7 @@
 javascript:(function(){
     /*
-        Version: 2022-06-24 16:40:52
-        tooltip text of config buttons
+        Version: 2022-06-24 20:10:35
+        save multiples positions and load them clicking a button
     */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
@@ -48,12 +48,12 @@ javascript:(function(){
      * dL: int default left of chat box, X coord
      * dW: int default width of chat box
      * dH: int default height if chat box
-     * pos_size: list of saves positions and size of chat box
-     *      name: string name of saved config
-     *      t: int top of chat box, Y coord
-     *      l: int left of chat box, X coord
-     *      w: int width of chat box
-     *      h: int height if chat box
+     * pos_list: object containing key values of saves positions and size of chat box
+     *      name: string key name of saved config
+     *          t: int top of chat box, Y coord
+     *          l: int left of chat box, X coord
+     *          w: int width of chat box
+     *          h: int height if chat box
     */
     var chat_config = JSON.parse(localStorage.getItem("chat_config")) ?? {};
 
@@ -271,6 +271,17 @@ javascript:(function(){
                             margin: 0px 5px;
                         }
 
+                        #posiciones_guardadas div,
+                        #posiciones_guardadas button{
+                            margin: 0px;
+                            padding: 2px;
+                            font-size: 12px;
+                        }
+
+                        #posiciones_guardadas button{
+                            padding: 3px 10px;
+                        }
+
                     </style>
                     <div id="caja">
                         <div id="cajaheader">
@@ -303,6 +314,30 @@ javascript:(function(){
                                             Reestablecer posición guardada como default
                                         </button>
                                     </div>
+                                    <div>
+                                        <button id="agregar_posicion"
+                                            title="Guarda la posición actual en una lista para poder ser cargada en cualquier momento">
+                                            Agregar posición guardada
+                                        </button>
+                                    </div>
+                                    <div id="posiciones_guardadas">
+                                    `;
+        
+        
+        if(chat_config.pos_list){
+            for (const key in chat_config.pos_list) {
+                if (Object.hasOwnProperty.call(chat_config.pos_list, key)) {
+                    const element = chat_config.pos_list[key];
+                    chatHTML += `
+                                        <div name='` + key + `'>
+                                            <button class="posicion_guardada" value='` + key + `'>` + key + `</button>
+                                            <button class="eliminar_posicion" value='` + key + `'>❌</button>                                            
+                                        </div>`;
+                }
+            }
+        }
+
+        chatHTML += `               </div>
                                 </div>
                             </div>
                         </div>
@@ -517,10 +552,10 @@ javascript:(function(){
     };
 
     const guardar_posiciones = () => {
-        const pos = caja.getBoundingClientRect();
+        const pos = get_pos();
         
-        chat_config.dL = caja.offsetLeft;
-        chat_config.dT = caja.offsetTop;
+        chat_config.dL = pos.left;
+        chat_config.dT = pos.top;
         chat_config.dW = pos.width;
         chat_config.dH = pos.height;
 
@@ -538,6 +573,19 @@ javascript:(function(){
 
     const guardar_config = () => {        
         localStorage.setItem("chat_config", JSON.stringify(chat_config));
+    };
+
+    const get_pos = () => {
+        var pos = {};
+
+        const current_pos = caja.getBoundingClientRect();
+        
+        pos.left = caja.offsetLeft;
+        pos.top = caja.offsetTop;
+        pos.width = current_pos.width;
+        pos.height = current_pos.height;
+
+        return pos;
     };
 
     var usuarios_colores = {};
@@ -634,6 +682,7 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
     const guardar_posicion_default_boton_div = document.getElementById("div_guardar_posicion_default");
     const guardar_posicion_default_boton = document.getElementById("guardar_posicion_default");
     const reestablecer_posicion_default_boton = document.getElementById("reestablecer_posicion_default");
+    const agregar_posicion_boton = document.getElementById("agregar_posicion");
 
     guardar_posicion_default_boton.addEventListener("click", guardar_posiciones, false);
     reestablecer_posicion_default_boton.addEventListener("click", reestablecer_posiciones, false);
@@ -653,6 +702,84 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
             chat_config.autosave = false; 
             guardar_posicion_default_boton_div.style.display = "inherit";
             reestablecer_posiciones();                      
+            config_div.style.maxHeight = config_div.scrollHeight + "px";
+        }
+    }, false);
+
+    const eliminar_posicion = name => {
+        const div = document.getElementsByName(name)[0];
+        div.parentNode.removeChild(div);
+
+        delete chat_config["pos_list"][name];
+        guardar_config();
+    };
+
+    const cargar_posicion = name => {
+        var pos = chat_config["pos_list"][name];
+
+        caja.style.left = pos.l + "px";
+        caja.style.top = pos.t + "px";
+        caja.style.width = pos.w + "px";
+        caja.style.height = pos.h + "px";
+    };
+
+    const posicion_guardada = document.getElementsByClassName("posicion_guardada");
+
+    [].forEach.call(posicion_guardada, function(e){
+        e.addEventListener("click", () => {
+            cargar_posicion(e.value);
+        }, false);
+    });
+
+    const eliminar_posicion_botones = document.getElementsByClassName("eliminar_posicion");
+
+    [].forEach.call(eliminar_posicion_botones, function(e){
+        e.addEventListener("click", () => {
+            eliminar_posicion(e.value);
+        }, false);
+    });
+
+    const posiciones_guardadas = document.getElementById("posiciones_guardadas");
+
+    agregar_posicion_boton.addEventListener("click", () => {
+        var new_name = window.prompt("Ingresar nombre del perfil a guardar");
+        if(new_name){
+            if(!chat_config.pos_list){
+                chat_config.pos_list = {};
+            }
+
+            const pos = get_pos();
+
+            chat_config["pos_list"][new_name] = {
+                t: pos.top,
+                l: pos.left,
+                w: pos.width,
+                h: pos.height
+            };
+
+            guardar_config();
+            var div = document.createElement("div");
+            div.setAttribute("name", new_name);
+
+            var boton_cargar = document.createElement("button");
+            boton_cargar.value = new_name;
+            boton_cargar.classList.add("posicion_guardada");
+            boton_cargar.innerHTML = new_name;
+
+            boton_cargar.addEventListener("click", () => cargar_posicion(new_name), false);
+            
+            var boton_eliminar = document.createElement("button");
+            boton_eliminar.value = new_name;
+            boton_eliminar.classList.add("eliminar_posicion");
+            boton_eliminar.innerHTML = "❌";
+
+            boton_eliminar.addEventListener("click", () => eliminar_posicion(new_name), false);
+
+            div.appendChild(boton_cargar);
+            div.appendChild(boton_eliminar);
+            
+            posiciones_guardadas.appendChild(div);
+
             config_div.style.maxHeight = config_div.scrollHeight + "px";
         }
     }, false);
