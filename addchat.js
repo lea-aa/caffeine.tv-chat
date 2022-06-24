@@ -295,7 +295,7 @@ javascript:(function(){
                                     </div>
                                     <div>
                                         <button id="reestablecer_posicion_default" onclick="reestablecer_posiciones()">
-                                            Reestabelcer posición guardada como default
+                                            Reestablecer posición guardada como default
                                         </button>
                                     </div>
                                 </div>
