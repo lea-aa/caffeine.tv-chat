@@ -1,7 +1,7 @@
 javascript:(function(){
     /*
-        Version: 2022-06-24 20:16:58
-        replaces += for insertAdjacentHTML every time a message appear so it won't replace all the html inside the chat window
+        Version: 2022-06-30 00:09:26Z
+        tts implemented 
     */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
@@ -493,6 +493,13 @@ javascript:(function(){
                 if (typeof pop_out_chat != "undefined") {
                     var pop_out_chat_messajes_html = pop_out_chat.document.getElementById("mensajesdiv");
                     pop_out_chat_messajes_html.innerHTML += mensajeHtml;
+                }
+
+                if (texto.startsWith("tts:")){
+                    var synth = window.speechSynthesis;
+                    var utterThis = new SpeechSynthesisUtterance(texto.replace(/^tts:/, ""));
+                    utterThis.lang = 'es-ES';
+                    synth.speak(utterThis);                    
                 }
             }
 
