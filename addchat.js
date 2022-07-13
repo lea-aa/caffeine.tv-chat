@@ -1,7 +1,7 @@
 javascript:(function(){
     /*
-        Version: 2022-06-30 00:09:26Z
-        tts implemented 
+        Version: 2022-07-13 20:37:44
+        tts enable / disable in config and help message
     */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
@@ -43,6 +43,7 @@ javascript:(function(){
     /**
      * store the chat config
      * autosave: bool if position autosave is enabled
+     * tts: bool enable tts
      * fs: int font size of chat messages
      * dT: int default top of chat box, Y coord
      * dL: int default left of chat box, X coord
@@ -297,6 +298,10 @@ javascript:(function(){
                                     <div>
                                         Tamaño de texto: <button id="aumentar_tamaño_texto">+</button> <button id="disminuir_tamaño_texto">-</button>
                                     </div>
+                                    <div title="TTS">
+                                        <label for="enable_tts">TTS: </label>
+                                        <input type="checkbox" name="enable_tts" id="enable_tts">
+                                    </div>
                                     <div title="Guarda la posición y tamaño de la ventana de chat automáticamente cada vez que se mueve o se redomensiona sin necesidad de presionar el botón guardar">
                                         <label for="guardar_posicion_automaticamente">Guardar posición automaticamente: </label>
                                         <input type="checkbox" name="guardar_posicion_automaticamente" id="guardar_posicion_automaticamente">
@@ -383,6 +388,7 @@ javascript:(function(){
     addChat();
 
     const save_config_checkbox = document.getElementById("guardar_posicion_automaticamente");
+    const enable_tts_checkbox = document.getElementById("enable_tts");
 
     /* Make the DIV element draggable: */
     dragElement(document.getElementById("caja"));
@@ -495,9 +501,9 @@ javascript:(function(){
                     pop_out_chat_messajes_html.innerHTML += mensajeHtml;
                 }
 
-                if (texto.startsWith("tts:")){
+                if (chat_config.tts && texto.startsWith("&") && texto.length > 1){
                     var synth = window.speechSynthesis;
-                    var utterThis = new SpeechSynthesisUtterance(texto.replace(/^tts:/, ""));
+                    var utterThis = new SpeechSynthesisUtterance(texto.replace(/^\&/, ""));
                     utterThis.lang = 'es-ES';
                     synth.speak(utterThis);                    
                 }
@@ -625,14 +631,23 @@ javascript:(function(){
         alert(`¿Cómo funciona el chat?\n
 Cada 2 segundos revisa si hay un globito nuevo de chat y si hay, lo agrega a la lista. \n
 Si la ventana del stream no esta visible en la pantalla (minimizada o hay otra ventana maximizada encima) los globitos no salen y los mensajes no van a quedar registrados.\n
-\n
+----\n
 ¿Qué se puede hacer con el chat?\n
 Podés mover la ventanita arrastrandola desde la parte de arriba donde está el título "👇 el chat 🤪".\n
 Con la X de arriba a la derecha podes cerrarlo y para abrirlo otra vez solo tenes que volver a tocar el marcador.\n
 Con el cuadrado al lado de la x podes sacar el chat a otra ventana pero por ahora no tiene el auto scroll.\n
 También podes cambiar el tamaño desde la esquina inferior derecha.\n
-Tocando el engranaje accedes a la configuración en la que por ahora se puede cambiar el tamaño del texto de los mensajes, tocandolo otra vez se vuelve a esconder el panel de configuración\n
-\n
+Tocando el engranaje accedes a la configuración, tocandolo otra vez se vuelve a esconder el panel de configuración.\n
+----\n
+En la configuración podés:\n
+-Cambiar el tamaño del texto. (*)\n
+-Activar/Desactivar el TTS (se usa poniendo el & al principio del mensaje). (*)\n
+-Activar el guardado automático de la posición y tamaño del chat cada vez que se mueve o redimensiona.\n
+-Guardar la posicion y tamaño actual como default (la próxima vez que abras el chat va a estar donde lo guardaste).\n
+-Reestablecer la posicion y tamaño guardada (la próxima vez que lo abras va a aparecer en la posición original calculada automaticamente).\n
+-Agregar la posición y tamaño actual a una lista para después cargarla aprentando el botón correspondiente.\n
+(*) se guarda automaticamente.\n
+---\n
 Dato extra.\n
 Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te podes dar cuenta porque la barrita de scroll cambia de color.`)
     }, false);
@@ -711,6 +726,22 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
             reestablecer_posiciones();                      
             config_div.style.maxHeight = config_div.scrollHeight + "px";
         }
+    }, false);
+
+    enable_tts_checkbox.checked = chat_config.tts ?? false;
+
+    if(chat_config.tts){
+        enable_tts_checkbox.checked = true;
+    }
+
+    enable_tts_checkbox.addEventListener("change", element => {
+        if (element.originalTarget.checked) {
+            chat_config.tts = true;             
+        }
+        else{
+            chat_config.tts = false;             
+        }
+        guardar_config();        
     }, false);
 
     const eliminar_posicion = name => {
