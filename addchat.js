@@ -1,7 +1,7 @@
 javascript:(function(){
     /*
-        Version: 2022-07-13 20:37:44
-        tts enable / disable in config and help message
+        Version: 2022-07-14 18:33:54
+        config box css scroll
     */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
@@ -244,9 +244,37 @@ javascript:(function(){
                             margin: 5px 0px;
                             border-radius: 8px;
                             font-size: 15px;                
-                            transition: max-height 0.2s ease-out;
+                            transition: max-height 0.2s ease-out, scrollbar-color 0.5s ease-in-out;
                             max-height: 0;
                             overflow: hidden;
+                            overflow-y: auto;
+                        }
+
+                        #config{
+                            scrollbar-color: var(--color-fondo) var(--color-bordes);
+                            scrollbar-width: thin;
+                        }
+                        #config:hover {
+                            scrollbar-color: var(--color-fondo) hsl(240, 29%, 58%);
+                            border-color: hsl(240, 29%, 58%);
+                        }
+            
+                        /* WebKit and Chromiums */
+                        #config::-webkit-scrollbar {
+                            width: 5px;
+                            background-color: var(--color-bordes);
+                            border-radius: 5px;
+                        }
+                        #config::-webkit-scrollbar-thumb {
+                            background: var(--color-fondo);
+                            border-radius: 5px;
+                        }
+                        /* WebKit and Chromiums */
+                        #config:hover::-webkit-scrollbar {
+                            background-color: hsl(240, 29%, 58%);
+                        }
+                        #config:hover::-webkit-scrollbar-thumb {
+                            background: var(--color-fondo);
                         }
                             
                         #config div{
@@ -695,7 +723,12 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
             config_div.style.maxHeight = null;
         }
         else{
-            config_div.style.maxHeight = config_div.scrollHeight + "px";
+            if (config_div.scrollHeight > caja.offsetHeight * 0.8){
+                config_div.style.maxHeight = caja.offsetHeight * 0.8 + "px";
+            }
+            else{
+                config_div.style.maxHeight = config_div.scrollHeight + "px";
+            }
         }
     }, false);
 
