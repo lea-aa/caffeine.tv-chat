@@ -1,7 +1,7 @@
 javascript:(function(){
     /*
-        Version: 2022-07-14 18:33:54
-        config box css scroll
+        Version: 2022-07-14 23:08:37
+        tts volume config
     */
     const caffeine_url_regex = /www.caffeine\.tv\/./;
     const current_url = window.location.href ;
@@ -44,6 +44,7 @@ javascript:(function(){
      * store the chat config
      * autosave: bool if position autosave is enabled
      * tts: bool enable tts
+     * volume_tts: int min 0 max 10
      * fs: int font size of chat messages
      * dT: int default top of chat box, Y coord
      * dL: int default left of chat box, X coord
@@ -230,20 +231,20 @@ javascript:(function(){
                             padding: 0px 4px;
                             font-weight: bold;
                         }
-                        
+
                         #config-container{
-                            position: sticky; 
-                            height: 0; 
+                            position: sticky;
+                            height: 0;
                             top: 32px;
                             z-index: 51;
                         }
-                        
-                        #config{    
-                            background-color: var(--color-bordes);                
+
+                        #config{
+                            background-color: var(--color-bordes);
                             display: block;
                             margin: 5px 0px;
                             border-radius: 8px;
-                            font-size: 15px;                
+                            font-size: 15px;
                             transition: max-height 0.2s ease-out, scrollbar-color 0.5s ease-in-out;
                             max-height: 0;
                             overflow: hidden;
@@ -258,7 +259,7 @@ javascript:(function(){
                             scrollbar-color: var(--color-fondo) hsl(240, 29%, 58%);
                             border-color: hsl(240, 29%, 58%);
                         }
-            
+
                         /* WebKit and Chromiums */
                         #config::-webkit-scrollbar {
                             width: 5px;
@@ -276,11 +277,11 @@ javascript:(function(){
                         #config:hover::-webkit-scrollbar-thumb {
                             background: var(--color-fondo);
                         }
-                            
+
                         #config div{
                             padding: 5px;
                         }
-                        
+
                         #caja button{
                             background-color: var(--color-fondo);
                             color: var(--color-letra);
@@ -291,7 +292,7 @@ javascript:(function(){
                             font-family: "Poppins","Roboto",sans-serif;
                             font-weight: 500;
                         }
-            
+
                         #caja button:active{
                             background-color: var(--color-bordes);
                         }
@@ -311,6 +312,14 @@ javascript:(function(){
                             padding: 3px 10px;
                         }
 
+                        #caja input{
+                            background-color: var(--color-fondo);
+                            color: var(--color-letra);
+                            text-align: center;
+                            border-radius: 5px;
+                            border: 2px solid var(--color-letra);
+                        }
+
                     </style>
                     <div id="caja">
                         <div id="cajaheader">
@@ -326,16 +335,18 @@ javascript:(function(){
                                     <div>
                                         Tamaño de texto: <button id="aumentar_tamaño_texto">+</button> <button id="disminuir_tamaño_texto">-</button>
                                     </div>
-                                    <div title="TTS">
+                                    <div title="Activa o desactiva el TTS">
                                         <label for="enable_tts">TTS: </label>
                                         <input type="checkbox" name="enable_tts" id="enable_tts">
+                                        <label for="volume_tts">Volumen: </label>
+                                        <input type="number" min="0" max="10" name="volume_tts" id="volume_tts" size="5" value="${chat_config.volume_tts ?? 0}" onKeyDown="return false">
                                     </div>
                                     <div title="Guarda la posición y tamaño de la ventana de chat automáticamente cada vez que se mueve o se redomensiona sin necesidad de presionar el botón guardar">
                                         <label for="guardar_posicion_automaticamente">Guardar posición automaticamente: </label>
                                         <input type="checkbox" name="guardar_posicion_automaticamente" id="guardar_posicion_automaticamente">
                                     </div>
                                     <div id="div_guardar_posicion_default"
-                                        title="Guarda la posición y tamaño actual de la ventana de chat como default y si se mueve, 
+                                        title="Guarda la posición y tamaño actual de la ventana de chat como default y si se mueve,
                                         la próxima vez que se cargue el chat, va a estar donde se guardó como default">
                                         <button id="guardar_posicion_default">
                                             Guardar posición actual como default
@@ -355,8 +366,8 @@ javascript:(function(){
                                     </div>
                                     <div id="posiciones_guardadas">
                                     `;
-        
-        
+
+
         if(chat_config.pos_list){
             for (const key in chat_config.pos_list) {
                 if (Object.hasOwnProperty.call(chat_config.pos_list, key)) {
@@ -364,7 +375,7 @@ javascript:(function(){
                     chatHTML += `
                                         <div name='` + key + `'>
                                             <button class="posicion_guardada" value='` + key + `'>` + key + `</button>
-                                            <button class="eliminar_posicion" value='` + key + `'>❌</button>                                            
+                                            <button class="eliminar_posicion" value='` + key + `'>❌</button>
                                         </div>`;
                 }
             }
@@ -381,7 +392,7 @@ javascript:(function(){
 
         var caja = document.getElementById("caja");
 
-        if(chat_config.dL && chat_config.dT && 
+        if(chat_config.dL && chat_config.dT &&
         chat_config.dW && chat_config.dH){
             caja.style.left = chat_config.dL + "px";
             caja.style.top = chat_config.dT + "px";
@@ -391,21 +402,21 @@ javascript:(function(){
         else{
             const top_bar_height_class = "header__redesign_header___2usis";
             var top_bar_height = 56;
-    
+
             try {
                 document.getElementsByClassName(top_bar_height_class)[0].offsetHeight;
             } catch (error) {
                 console.log(error);
                 console.log("No se pudo encontrar el elemento top_bar (barra superior)");
             }
-    
+
             var reproductor_width = 800, reproductor_height = 470;
-    
+
             if (typeof reproductor != "undefined") {
                 reproductor_height = reproductor.offsetHeight;
                 reproductor_width = reproductor.offsetWidth;
             }
-    
+
             caja.style.top = top_bar_height + 10 + "px";
             caja.style.left = reproductor_width + 10 + "px";
             caja.style.width = document.body.clientWidth - reproductor_width - 20 + "px";
@@ -465,7 +476,7 @@ javascript:(function(){
         }
     }
 
-    
+
     const caja_mensajes_class = "reaction__reaction___1LNsk";
 
     const contenido_mensajes_class = "reaction-body__redesign_reactionBody___2a9UP";
@@ -533,7 +544,8 @@ javascript:(function(){
                     var synth = window.speechSynthesis;
                     var utterThis = new SpeechSynthesisUtterance(texto.replace(/^\&/, ""));
                     utterThis.lang = 'es-ES';
-                    synth.speak(utterThis);                    
+                    utterThis.volume = (chat_config.volume_tts ?? 0) / 10;
+                    synth.speak(utterThis);
                 }
             }
 
@@ -594,7 +606,7 @@ javascript:(function(){
 
     const guardar_posiciones = () => {
         const pos = get_pos();
-        
+
         chat_config.dL = pos.left;
         chat_config.dT = pos.top;
         chat_config.dW = pos.width;
@@ -612,7 +624,7 @@ javascript:(function(){
         guardar_config();
     };
 
-    const guardar_config = () => {        
+    const guardar_config = () => {
         localStorage.setItem("chat_config", JSON.stringify(chat_config));
     };
 
@@ -620,7 +632,7 @@ javascript:(function(){
         var pos = {};
 
         const current_pos = caja.getBoundingClientRect();
-        
+
         pos.left = caja.offsetLeft;
         pos.top = caja.offsetTop;
         pos.width = current_pos.width;
@@ -692,13 +704,13 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
         pop_out_chat.document.getElementById("caja").style.width = "calc(100% - 16px)";
         pop_out_chat.document.getElementById("caja").style.height = "calc(100% - 16px)";
         pop_out_chat.document.body.style.background = "black";
-    }, false);    
+    }, false);
 
     var boton_aumentar_texto = document.getElementById("aumentar_tamaño_texto");
     boton_aumentar_texto.addEventListener("click", function(){
         var r  = document.querySelector(":root");
         if (font_size < 100) {
-            font_size++;                    
+            font_size++;
             chat_config.fs = font_size;
             guardar_config();
         }
@@ -732,7 +744,7 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
         }
     }, false);
 
-    /* CheckBox guardar_posicion */   
+    /* CheckBox guardar_posicion */
 
     const guardar_posicion_default_boton_div = document.getElementById("div_guardar_posicion_default");
     const guardar_posicion_default_boton = document.getElementById("guardar_posicion_default");
@@ -749,14 +761,14 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
 
     save_config_checkbox.addEventListener("change", element => {
         if (element.originalTarget.checked) {
-            chat_config.autosave = true; 
+            chat_config.autosave = true;
             guardar_posicion_default_boton_div.style.display = "none";
-            guardar_posiciones();        
+            guardar_posiciones();
         }
         else{
-            chat_config.autosave = false; 
+            chat_config.autosave = false;
             guardar_posicion_default_boton_div.style.display = "inherit";
-            reestablecer_posiciones();                      
+            reestablecer_posiciones();
             config_div.style.maxHeight = config_div.scrollHeight + "px";
         }
     }, false);
@@ -769,12 +781,12 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
 
     enable_tts_checkbox.addEventListener("change", element => {
         if (element.originalTarget.checked) {
-            chat_config.tts = true;             
+            chat_config.tts = true;
         }
         else{
-            chat_config.tts = false;             
+            chat_config.tts = false;
         }
-        guardar_config();        
+        guardar_config();
     }, false);
 
     const eliminar_posicion = name => {
@@ -838,7 +850,7 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
             boton_cargar.innerHTML = new_name;
 
             boton_cargar.addEventListener("click", () => cargar_posicion(new_name), false);
-            
+
             var boton_eliminar = document.createElement("button");
             boton_eliminar.value = new_name;
             boton_eliminar.classList.add("eliminar_posicion");
@@ -848,12 +860,27 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
 
             div.appendChild(boton_cargar);
             div.appendChild(boton_eliminar);
-            
+
             posiciones_guardadas.appendChild(div);
 
             config_div.style.maxHeight = config_div.scrollHeight + "px";
         }
     }, false);
+
+    var volume_value_input = document.getElementById("volume_tts");
+    var synth = window.speechSynthesis;
+    volume_value_input.addEventListener("click", _ => {
+        if(synth.speaking || synth.pending) synth.cancel();
+        var utterThis = new SpeechSynthesisUtterance(volume_value_input.value);
+        utterThis.volume = volume_value_input.value / 10;
+        console.log(volume_value_input.value / 10);
+        utterThis.lang = 'es-ES';
+        synth.speak(utterThis);
+        chat_config.volume_tts = volume_value_input.value;
+        guardar_config();
+    }, false);
+
+    volume_value_input.value = chat_config.volume_tts ?? 0;
 
     const observer = new ResizeObserver(mutations => {
         if (save_config_checkbox.checked) {
@@ -883,6 +910,6 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
     /* para contar cuantos mensajes maximos a almacenar para evitar mostrarlo duplicado */
     const max_mensajes_dup = 10;
 
-    mostrar_mensajes();    
+    mostrar_mensajes();
 
 })();
