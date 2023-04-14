@@ -1,7 +1,7 @@
 javascript:(function(){
 	/*
-		Version: 2022-07-14 23:08:37
-		replaced spaces for tab because bookmarks have char limit
+		Version: 2023-04-14 20:17:54Z
+		tts voice selector and improvements
 	*/
 	const caffeine_url_regex = /www.caffeine\.tv\/./;
 	const current_url = window.location.href ;
@@ -338,9 +338,15 @@ javascript:(function(){
 									<div title="Activa o desactiva el TTS">
 										<label for="enable_tts">TTS: </label>
 										<input type="checkbox" name="enable_tts" id="enable_tts">
+									</div>
+									<div>
 										<label for="volume_tts">Volumen: </label>
 										<input type="number" min="0" max="10" name="volume_tts" id="volume_tts" size="5" value="${chat_config.volume_tts ?? 0}" onKeyDown="return false">
 									</div>
+									<div>
+										<label for="voices">Voz: </label>
+										<select name="voices" id="voices"></select>
+									</div>									
 									<div title="Guarda la posición y tamaño de la ventana de chat automáticamente cada vez que se mueve o se redomensiona sin necesidad de presionar el botón guardar">
 										<label for="guardar_posicion_automaticamente">Guardar posición automaticamente: </label>
 										<input type="checkbox" name="guardar_posicion_automaticamente" id="guardar_posicion_automaticamente">
@@ -541,11 +547,7 @@ javascript:(function(){
 				}
 
 				if (chat_config.tts && texto.startsWith("&") && texto.length > 1){
-					var synth = window.speechSynthesis;
-					var utterThis = new SpeechSynthesisUtterance(texto.replace(/^\&/, ""));
-					utterThis.lang = 'es-ES';
-					utterThis.volume = (chat_config.volume_tts ?? 0) / 10;
-					synth.speak(utterThis);
+					if (chat_config.tts) say(texto.replace(/^\&/, ""));
 				}
 			}
 
@@ -869,13 +871,44 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
 
 	var volume_value_input = document.getElementById("volume_tts");
 	var synth = window.speechSynthesis;
+
+	synth.onvoiceschanged = _ => {
+		loadVoices();
+	};
+
+	const voicesCombobox = document.querySelector("#voices")     ;
+	voicesCombobox.onchange = _ => {
+		say(voicesCombobox.value);
+	};
+
+	const say = (text) => {
+		/*if(synth.speaking || synth.pending) synth.cancel();*/
+		var utterThis = new SpeechSynthesisUtterance(text);
+		utterThis.lang = voicesCombobox[voicesCombobox.selectedIndex].getAttribute("lang");
+		utterThis.voice = voices.find(voice => voice.name === voicesCombobox[voicesCombobox.selectedIndex].getAttribute("name"));
+		utterThis.volume = (chat_config.volume_tts ?? 0) / 10;
+		synth.speak(utterThis);
+	};
+
+	function loadVoices(){
+		voices = synth.getVoices();
+		for (let i = 0; i < voices.length; i++) {
+			const voice = voices[i];
+			const option = document.createElement("option");
+			option.value = voice.name;
+			option.textContent = voice.lang + " " + voice.name;
+			option.setAttribute("lang", voice.lang);
+			option.setAttribute("name", voice.name);
+			voicesCombobox.appendChild(option);
+		}
+	}
+
+
+	loadVoices();
+
 	volume_value_input.addEventListener("click", _ => {
 		if(synth.speaking || synth.pending) synth.cancel();
-		var utterThis = new SpeechSynthesisUtterance(volume_value_input.value);
-		utterThis.volume = volume_value_input.value / 10;
-		console.log(volume_value_input.value / 10);
-		utterThis.lang = 'es-ES';
-		synth.speak(utterThis);
+		say(volume_value_input.value);		
 		chat_config.volume_tts = volume_value_input.value;
 		guardar_config();
 	}, false);
