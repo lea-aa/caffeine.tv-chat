@@ -1,7 +1,7 @@
 javascript:(function(){
 	/*
-		Version: 2023-04-14 20:17:54Z
-		tts voice selector and improvements
+		Version: 2023-04-17 20:45:21Z
+		tts fix on chrome
 	*/
 	const caffeine_url_regex = /www.caffeine\.tv\/./;
 	const current_url = window.location.href ;
@@ -335,7 +335,7 @@ javascript:(function(){
 									<div>
 										Tamaño de texto: <button id="aumentar_tamaño_texto">+</button> <button id="disminuir_tamaño_texto">-</button>
 									</div>
-									<div title="Activa o desactiva el TTS">
+									<div title="Activa o desactiva el TTS" id="enable_tts_div">
 										<label for="enable_tts">TTS: </label>
 										<input type="checkbox" name="enable_tts" id="enable_tts">
 									</div>
@@ -346,7 +346,7 @@ javascript:(function(){
 									<div>
 										<label for="voices">Voz: </label>
 										<select name="voices" id="voices"></select>
-									</div>									
+									</div>
 									<div title="Guarda la posición y tamaño de la ventana de chat automáticamente cada vez que se mueve o se redomensiona sin necesidad de presionar el botón guardar">
 										<label for="guardar_posicion_automaticamente">Guardar posición automaticamente: </label>
 										<input type="checkbox" name="guardar_posicion_automaticamente" id="guardar_posicion_automaticamente">
@@ -781,8 +781,10 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
 		enable_tts_checkbox.checked = true;
 	}
 
-	enable_tts_checkbox.addEventListener("change", element => {
-		if (element.originalTarget.checked) {
+	const enable_tts_div = document.querySelector("#enable_tts_div");
+
+	enable_tts_div.addEventListener("click", element => {
+		if (enable_tts_checkbox.checked) {
 			chat_config.tts = true;
 		}
 		else{
@@ -908,7 +910,7 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
 
 	volume_value_input.addEventListener("click", _ => {
 		if(synth.speaking || synth.pending) synth.cancel();
-		say(volume_value_input.value);		
+		say(volume_value_input.value);
 		chat_config.volume_tts = volume_value_input.value;
 		guardar_config();
 	}, false);
@@ -924,15 +926,6 @@ Cuando tenes el mouse por encima del chat, se desactiva el scroll automatico, te
 	observer.observe(caja);
 
 	window.caja = caja;
-
-	/* para contar las repeticiones y cada x tiempo limpiar el array de mensajes */
-
-	/*const tiempo_limpiar = 60;
-
-	var rep = 0;
-
-	const max_rep = tiempo_limpiar / segundos_espera;*/
-
 
 	var mensajes = new Array();
 
